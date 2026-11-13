@@ -1,28 +1,87 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>HubGlass — Controle Amazon Hub</title>
-  <!-- Leitor de Código de Barras 1D / QR para ler etiqueta TBR -->
+  <title>LASTRO — Logística, Auditoria, Saldo, TBRs e Recebíveis Operacionais</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <style>
     :root {
-      --glass-bg: rgba(255, 255, 255, 0.10);
-      --glass-bg-strong: rgba(255, 255, 255, 0.16);
-      --glass-border: rgba(255, 255, 255, 0.28);
-      --glass-highlight: rgba(255, 255, 255, 0.55);
-      --text-primary: #ffffff;
-      --text-secondary: rgba(255, 255, 255, 0.72);
-      --accent-blue: #38bdf8;
-      --accent-cyan: #22d3ee;
-      --accent-green: #34d399;
-      --accent-amber: #fbbf24;
-      --accent-red: #fb7185;
-      --accent-purple: #a78bfa;
-      --radius-xl: 26px;
-      --radius-lg: 20px;
-      --radius-md: 14px;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+      --radius-card: 22px;
+      --radius-control: 12px;
+      --radius-pill: 999px;
+    }
+
+    /* TEMA ESCURO (OBSIDIAN & TITANIUM EXECUTIVE) */
+    [data-theme="dark"] {
+      --bg-base: #08090c;
+      --bg-gradient: radial-gradient(120% 90% at 50% 0%, #161922 0%, #0b0d12 55%, #07080b 100%);
+      --grid-line: rgba(255, 255, 255, 0.025);
+      --ambient-glow: rgba(148, 163, 184, 0.07);
+
+      --glass-surface: linear-gradient(145deg, rgba(255, 255, 255, 0.075) 0%, rgba(255, 255, 255, 0.025) 100%);
+      --glass-surface-elevated: linear-gradient(145deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
+      --glass-border: rgba(255, 255, 255, 0.11);
+      --glass-specular-top: rgba(255, 255, 255, 0.28);
+      --glass-specular-bottom: rgba(255, 255, 255, 0.04);
+      --glass-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.65);
+
+      --input-bg: rgba(0, 0, 0, 0.35);
+      --input-border: rgba(255, 255, 255, 0.12);
+      --input-focus: rgba(255, 255, 255, 0.32);
+
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --divider: rgba(255, 255, 255, 0.07);
+
+      --accent-primary: #e2e8f0;
+      --accent-primary-fg: #090a0f;
+      --status-positive: #10b981;
+      --status-positive-bg: rgba(16, 185, 129, 0.12);
+      --status-warning: #f59e0b;
+      --status-warning-bg: rgba(245, 158, 11, 0.12);
+      --status-danger: #f43f5e;
+      --status-danger-bg: rgba(244, 63, 94, 0.12);
+    }
+
+    /* TEMA CLARO (PLATINUM & ALABASTER EXECUTIVE) */
+    [data-theme="light"] {
+      --bg-base: #eef1f6;
+      --bg-gradient: radial-gradient(120% 90% at 50% 0%, #ffffff 0%, #eef1f6 60%, #e2e7f0 100%);
+      --grid-line: rgba(15, 23, 42, 0.035);
+      --ambient-glow: rgba(15, 23, 42, 0.04);
+
+      --glass-surface: linear-gradient(145deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.48) 100%);
+      --glass-surface-elevated: linear-gradient(145deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.68) 100%);
+      --glass-border: rgba(15, 23, 42, 0.09);
+      --glass-specular-top: rgba(255, 255, 255, 0.95);
+      --glass-specular-bottom: rgba(15, 23, 42, 0.04);
+      --glass-shadow: 0 18px 38px -14px rgba(15, 23, 42, 0.10);
+
+      --input-bg: rgba(255, 255, 255, 0.65);
+      --input-border: rgba(15, 23, 42, 0.12);
+      --input-focus: rgba(15, 23, 42, 0.35);
+
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --divider: rgba(15, 23, 42, 0.07);
+
+      --accent-primary: #0f172a;
+      --accent-primary-fg: #ffffff;
+      --status-positive: #059669;
+      --status-positive-bg: rgba(5, 150, 105, 0.10);
+      --status-warning: #d97706;
+      --status-warning-bg: rgba(217, 119, 6, 0.10);
+      --status-danger: #e11d48;
+      --status-danger-bg: rgba(225, 29, 72, 0.10);
     }
 
     * {
@@ -30,700 +89,945 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
     }
 
     body {
       min-height: 100vh;
-      background: #060913;
+      font-family: var(--font-sans);
+      background: var(--bg-base);
+      background-image: var(--bg-gradient);
       color: var(--text-primary);
       overflow-x: hidden;
+      transition: background 0.4s var(--ease-spring), color 0.3s ease;
       padding-bottom: 110px;
     }
 
-    /* Fundo Dinâmico Liquid Glass */
-    .ambient-canvas {
+    /* Malha Arquitetônica Sutil de Fundo */
+    .architectural-backdrop {
       position: fixed;
       inset: 0;
       z-index: -1;
-      overflow: hidden;
-      background: radial-gradient(circle at 15% 15%, #0c2d57 0%, #060913 55%);
-    }
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(75px);
-      opacity: 0.65;
-      animation: floatOrb 18s infinite alternate ease-in-out;
-    }
-    .orb-1 { width: 340px; height: 340px; background: #0284c7; top: -60px; left: -50px; }
-    .orb-2 { width: 300px; height: 300px; background: #6d28d9; bottom: 10%; right: -70px; animation-delay: -5s; }
-    .orb-3 { width: 250px; height: 250px; background: #059669; top: 42%; left: 18%; animation-delay: -10s; opacity: 0.45; }
-
-    @keyframes floatOrb {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(30px, -40px) scale(1.12); }
+      background-image:
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 20%, #000 30%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 20%, #000 30%, transparent 100%);
+      pointer-events: none;
     }
 
-    /* Liquid Glass Kit Surface */
-    .liquid-glass {
+    /* MOTOR YBOUANE/LIQUIDGLASS */
+    .lg-surface {
       position: relative;
-      background: linear-gradient(135deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.05) 100%);
-      backdrop-filter: url(#liquid-refraction) blur(26px) saturate(190%);
-      -webkit-backdrop-filter: blur(26px) saturate(190%);
+      background: var(--glass-surface);
+      backdrop-filter: url(#ybouane-liquid-glass) blur(28px) saturate(160%);
+      -webkit-backdrop-filter: blur(28px) saturate(160%);
       border: 1px solid var(--glass-border);
       box-shadow:
-        0 18px 40px -12px rgba(0, 0, 0, 0.55),
-        inset 0 1.5px 1px 0 var(--glass-highlight),
-        inset 0 -1px 1px 0 rgba(255, 255, 255, 0.08);
-      border-radius: var(--radius-xl);
-      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease;
-    }
-
-    .liquid-pill {
-      background: rgba(255, 255, 255, 0.11);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.24);
-      box-shadow: inset 0 1px 0.5px rgba(255, 255, 255, 0.4);
-      border-radius: 999px;
-    }
-
-    .app-container {
-      max-width: 540px;
-      margin: 0 auto;
-      padding: 18px 16px;
-    }
-
-    /* Header */
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
-      padding: 12px 18px;
-    }
-    .brand-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .sync-btn {
-      padding: 7px 14px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      border: none;
-    }
-
-    /* KPI Grid */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-    .kpi-card {
-      padding: 16px;
-    }
-    .kpi-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--text-secondary);
-      margin-bottom: 6px;
-    }
-    .kpi-value {
-      font-size: 1.45rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-    }
-    .kpi-sub {
-      font-size: 0.76rem;
-      color: var(--text-secondary);
-      margin-top: 4px;
-    }
-
-    /* Barra de Meta 98% */
-    .meta-banner {
-      padding: 14px 18px;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-    .progress-track {
-      flex: 1;
-      height: 8px;
-      background: rgba(255,255,255,0.12);
-      border-radius: 99px;
+        var(--glass-shadow),
+        inset 0 1px 0 0 var(--glass-specular-top),
+        inset 0 -1px 0 0 var(--glass-specular-bottom);
+      border-radius: var(--radius-card);
       overflow: hidden;
-      margin-top: 6px;
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #34d399, #38bdf8);
-      border-radius: 99px;
-      transition: width 0.35s ease;
+      transition: transform 0.35s var(--ease-spring), border-color 0.3s ease, box-shadow 0.35s var(--ease-spring);
     }
 
-    /* Form Controls */
-    .section-card {
-      padding: 20px;
-      margin-bottom: 16px;
+    /* Reflexo dinâmico de luz no vidro (Pointer Glare) */
+    .lg-surface::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        420px circle at var(--mouse-x, 50%) var(--mouse-y, 0%),
+        rgba(255, 255, 255, 0.08),
+        transparent 45%
+      );
+      pointer-events: none;
+      z-index: 0;
     }
-    .section-title {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 14px;
+    .lg-surface > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .lg-pill {
+      background: var(--glass-surface-elevated);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow: inset 0 1px 0 0 var(--glass-specular-top);
+      border-radius: var(--radius-pill);
+    }
+
+    /* SHELL RESPONSIVO (MOBILE & DESKTOP) */
+    .app-shell {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 20px 16px;
+    }
+
+    /* HEADER EXECUTIVO */
+    .header-bar {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
+      gap: 14px;
+      padding: 14px 20px;
+      margin-bottom: 24px;
     }
-    .field-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 11px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.09);
-    }
-    .field-row:last-child { border-bottom: none; }
-    .field-info h4 { font-size: 0.92rem; font-weight: 600; }
-    .field-info p { font-size: 0.74rem; color: var(--text-secondary); }
 
-    .stepper {
+    .brand-block {
       display: flex;
       align-items: center;
-      gap: 8px;
-    }
-    .btn-circle {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.3);
-      background: rgba(255,255,255,0.12);
-      color: #fff;
-      font-size: 1.1rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .input-glass {
-      background: rgba(0, 0, 0, 0.28);
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      border-radius: 12px;
-      color: #fff;
-      padding: 9px 12px;
-      font-size: 0.92rem;
-      font-weight: 600;
-      outline: none;
-    }
-    .input-num {
-      width: 66px;
-      text-align: center;
+      gap: 12px;
     }
 
-    .btn-primary {
-      width: 100%;
-      padding: 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.4);
-      background: linear-gradient(135deg, rgba(56,189,248,0.55), rgba(52,211,153,0.45));
-      backdrop-filter: blur(16px);
-      color: #fff;
-      font-size: 0.96rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.4), inset 0 1px 1px rgba(255,255,255,0.6);
-      margin-top: 12px;
-    }
-
-    .btn-secondary {
-      padding: 9px 14px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #fff;
-      cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.28);
-      background: rgba(255,255,255,0.1);
-      border-radius: 12px;
-    }
-
-    /* Badges */
-    .badge {
-      padding: 4px 10px;
-      border-radius: 99px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      display: inline-block;
-    }
-    .badge-green { background: rgba(52, 211, 153, 0.22); color: #6ee7b7; border: 1px solid rgba(52,211,153,0.4); }
-    .badge-amber { background: rgba(251, 191, 36, 0.22); color: #fde68a; border: 1px solid rgba(251,191,36,0.4); }
-    .badge-red { background: rgba(251, 113, 133, 0.22); color: #fda4af; border: 1px solid rgba(251,113,133,0.4); }
-
-    /* Lista de Cards Internos */
-    .item-card {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 16px;
-      padding: 13px;
-      margin-bottom: 10px;
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--accent-primary);
+      color: var(--accent-primary-fg);
       display: flex;
-      justify-content: space-between;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .brand-sub {
+      font-size: 0.68rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+    }
+
+    /* Navegação Desktop Embutida no Header */
+    .desktop-nav {
+      display: none;
+      gap: 4px;
+      padding: 4px;
+    }
+
+    .header-actions {
+      display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    /* Floating Bottom Dock (Apple Liquid Glass Tabbar) */
+    /* Seletor de Tema (Auto / Escuro / Claro) */
+    .theme-segmented {
+      display: inline-flex;
+      padding: 3px;
+      gap: 2px;
+    }
+    .theme-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all 0.25s var(--ease-spring);
+    }
+    .theme-btn.active {
+      background: var(--accent-primary);
+      color: var(--accent-primary-fg);
+    }
+
+    .btn-icon-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 13px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: transform 0.2s var(--ease-spring);
+    }
+    .btn-icon-pill:active { transform: scale(0.96); }
+
+    /* BENTO GRID RESPONSIVO */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    @media (min-width: 920px) {
+      body { padding-bottom: 40px; }
+      .app-shell { padding: 28px 32px; }
+      .bottom-dock { display: none !important; }
+      .desktop-nav { display: inline-flex; }
+      .bento-grid-hoje {
+        grid-template-columns: 7fr 5fr;
+        align-items: start;
+      }
+      .bento-grid-2col {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+      }
+    }
+
+    /* KPI ROW */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .kpi-tile {
+      padding: 20px;
+    }
+    .kpi-meta {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .kpi-number {
+      font-family: var(--font-mono);
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+    }
+    .kpi-foot {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* PAINÉIS E FORMULÁRIOS */
+    .panel {
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--divider);
+    }
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .control-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--divider);
+      gap: 12px;
+    }
+    .control-row:last-of-type { border-bottom: none; }
+    .control-label h4 {
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+    .control-label p {
+      font-size: 0.74rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* Steppers e Inputs */
+    .stepper-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      padding: 4px;
+      border-radius: var(--radius-control);
+    }
+    .stepper-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+    .stepper-btn:hover { background: rgba(255, 255, 255, 0.14); }
+    .stepper-btn:active { transform: scale(0.92); }
+
+    .input-field {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-control);
+      color: var(--text-primary);
+      padding: 9px 12px;
+      font-family: var(--font-sans);
+      font-size: 0.86rem;
+      font-weight: 500;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .input-field:focus { border-color: var(--input-focus); }
+    .input-mono {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+    .input-stepper {
+      width: 54px;
+      text-align: center;
+      border: none;
+      background: transparent;
+      padding: 4px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    /* Botões Principais */
+    .btn-exec {
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: var(--radius-control);
+      border: 1px solid transparent;
+      background: var(--accent-primary);
+      color: var(--accent-primary-fg);
+      font-size: 0.86rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      margin-top: 14px;
+      transition: transform 0.25s var(--ease-spring), opacity 0.2s ease;
+    }
+    .btn-exec:hover { opacity: 0.92; }
+    .btn-exec:active { transform: scale(0.985); }
+
+    .btn-ghost {
+      padding: 8px 13px;
+      border-radius: 10px;
+      border: 1px solid var(--glass-border);
+      background: var(--input-bg);
+      color: var(--text-primary);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: border-color 0.2s ease, transform 0.2s var(--ease-spring);
+    }
+    .btn-ghost:hover { border-color: var(--input-focus); }
+    .btn-ghost:active { transform: scale(0.96); }
+
+    /* Barra de Progresso SLA 98% */
+    .sla-track {
+      width: 100%;
+      height: 6px;
+      background: var(--input-bg);
+      border-radius: 99px;
+      overflow: hidden;
+      margin: 10px 0 8px;
+    }
+    .sla-fill {
+      height: 100%;
+      background: var(--status-positive);
+      border-radius: 99px;
+      transition: width 0.5s var(--ease-spring), background-color 0.3s ease;
+    }
+
+    /* Status Pills */
+    .status-pill {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .pill-positive { background: var(--status-positive-bg); color: var(--status-positive); }
+    .pill-warning { background: var(--status-warning-bg); color: var(--status-warning); }
+    .pill-danger { background: var(--status-danger-bg); color: var(--status-danger); }
+
+    /* Lista de Registros */
+    .data-row {
+      padding: 14px;
+      border-radius: 14px;
+      background: var(--input-bg);
+      border: 1px solid var(--divider);
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      transition: border-color 0.2s ease;
+    }
+    .data-row:hover { border-color: var(--glass-border); }
+
+    /* Navegação e Views */
+    .view-section { display: none; }
+    .view-section.active {
+      display: block;
+      animation: viewEnter 0.38s var(--ease-spring);
+    }
+    @keyframes viewEnter {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* DOCK MOBILE FLUTUANTE */
     .bottom-dock {
       position: fixed;
-      bottom: 18px;
+      bottom: 16px;
       left: 50%;
       transform: translateX(-50%);
       width: calc(100% - 28px);
-      max-width: 500px;
-      padding: 8px;
+      max-width: 460px;
+      padding: 6px;
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 4px;
       z-index: 100;
     }
-    .tab-btn {
-      background: transparent;
+    .nav-item {
       border: none;
+      background: transparent;
       color: var(--text-secondary);
-      padding: 9px 4px;
-      border-radius: 999px;
-      font-size: 0.7rem;
+      padding: 8px 6px;
+      border-radius: var(--radius-pill);
+      font-size: 0.68rem;
       font-weight: 600;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
+      gap: 4px;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.25s var(--ease-spring);
     }
-    .tab-btn.active {
-      background: rgba(255, 255, 255, 0.20);
-      color: #fff;
-      box-shadow: inset 0 1px 1px rgba(255,255,255,0.5);
+    .nav-item svg { width: 17px; height: 17px; stroke-width: 1.8; }
+    .nav-item.active {
+      background: var(--accent-primary);
+      color: var(--accent-primary-fg);
     }
-
-    .tab-view { display: none; }
-    .tab-view.active { display: block; animation: fadeIn 0.25s ease; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
+    .desktop-nav .nav-item {
+      flex-direction: row;
+      font-size: 0.76rem;
+      padding: 7px 14px;
+      gap: 7px;
     }
 
-    /* Modal Liquid Glass */
-    .modal-backdrop {
+    /* Modais */
+    .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(4, 7, 17, 0.72);
-      backdrop-filter: blur(12px);
-      z-index: 200;
+      background: rgba(5, 7, 12, 0.72);
+      backdrop-filter: blur(14px);
+      z-index: 250;
       display: none;
       align-items: center;
       justify-content: center;
       padding: 16px;
     }
-    .modal-backdrop.open { display: flex; }
-    .modal-box {
+    .modal-overlay.open { display: flex; }
+    .modal-card {
       width: 100%;
       max-width: 440px;
-      padding: 20px;
+      padding: 24px;
       max-height: 90vh;
       overflow-y: auto;
     }
-    #reader {
-      width: 100%;
-      border-radius: 14px;
-      overflow: hidden;
-      margin-bottom: 10px;
-    }
+    #reader { width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 10px; }
     .preview-img {
       width: 100%;
-      max-height: 170px;
+      max-height: 160px;
       object-fit: cover;
       border-radius: 12px;
       margin-top: 8px;
       display: none;
-      border: 1px solid rgba(255,255,255,0.3);
+      border: 1px solid var(--glass-border);
     }
   </style>
 </head>
 <body>
 
-  <!-- Filtro SVG Oficial de Refração Liquid Glass -->
-  <svg width="0" height="0" style="position:absolute">
-    <filter id="liquid-refraction">
-      <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="noise" />
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G" />
-    </filter>
+  <!-- Filtro Óptico SVG ybouane/liquidglass -->
+  <svg width="0" height="0" style="position:absolute; pointer-events:none;">
+    <defs>
+      <filter id="ybouane-liquid-glass" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.012" numOctaves="2" seed="4" result="noise" />
+        <feGaussianBlur in="noise" stdDeviation="2.5" result="smoothNoise" />
+        <feDisplacementMap in="SourceGraphic" in2="smoothNoise" scale="6" xChannelSelector="R" yChannelSelector="G" result="refracted" />
+        <feSpecularLighting in="smoothNoise" surfaceScale="2" specularConstant="0.45" specularExponent="25" lighting-color="#ffffff" result="specular">
+          <fePointLight x="-200" y="-200" z="300" />
+        </feSpecularLighting>
+        <feComposite in="specular" in2="SourceAlpha" operator="in" result="specularMask" />
+        <feBlend mode="screen" in="refracted" in2="specularMask" />
+      </filter>
+    </defs>
   </svg>
 
-  <div class="ambient-canvas">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-  </div>
+  <div class="architectural-backdrop"></div>
 
-  <div class="app-container">
-    <!-- Top Bar -->
-    <header class="top-bar liquid-glass">
-      <div class="brand-title">
-        <span>📦</span>
+  <div class="app-shell">
+    <!-- BARRA DE TOPO -->
+    <header class="header-bar lg-surface">
+      <div class="brand-block">
+        <div class="brand-mark">LT</div>
         <div>
-          <div>Amazon Hub Glass</div>
-          <div style="font-size:0.7rem; font-weight:400; color:var(--text-secondary)" id="syncStatusText">Conectado ao Google Sheets ✓</div>
+          <div class="brand-name">LASTRO</div>
+          <div class="brand-sub" id="syncStatusText">Logística, Auditoria, Saldo, TBRs e Recebíveis</div>
         </div>
       </div>
-      <button class="sync-btn liquid-pill" onclick="sincronizarPlanilha(false)">🔄 Sincronizar</button>
+
+      <!-- Menu Desktop -->
+      <nav class="desktop-nav lg-pill">
+        <button class="nav-item active" data-target="hoje" onclick="mudarAba('hoje')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          Operação
+        </button>
+        <button class="nav-item" data-target="tbr" onclick="mudarAba('tbr')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></svg>
+          TBRs
+        </button>
+        <button class="nav-item" data-target="financeiro" onclick="mudarAba('financeiro')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Recebíveis
+        </button>
+        <button class="nav-item" data-target="indicacoes" onclick="mudarAba('indicacoes')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Indicações
+        </button>
+        <button class="nav-item" data-target="config" onclick="mudarAba('config')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Histórico
+        </button>
+      </nav>
+
+      <div class="header-actions">
+        <div class="theme-segmented lg-pill" role="group" aria-label="Seletor de Tema">
+          <button class="theme-btn" id="btnThemeAuto" onclick="definirTema('auto')">Auto</button>
+          <button class="theme-btn" id="btnThemeDark" onclick="definirTema('dark')">Escuro</button>
+          <button class="theme-btn" id="btnThemeLight" onclick="definirTema('light')">Claro</button>
+        </div>
+        <button class="btn-icon-pill lg-pill" onclick="sincronizarPlanilha(false)" title="Sincronizar com Google Sheets">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+          Sync
+        </button>
+      </div>
     </header>
 
-    <!-- ABA 1: HOJE / LANÇAMENTO -->
-    <section id="tab-hoje" class="tab-view active">
-      <div class="kpi-grid">
-        <div class="kpi-card liquid-glass">
-          <div class="kpi-label">Ganho Hoje (Bruto)</div>
-          <div class="kpi-value" id="kpiGanhoHojeBruto" style="color:var(--accent-green)">R$ 80,85</div>
-          <div class="kpi-sub" id="kpiGanhoHojeLiq">Líquido: R$ 75,25</div>
+    <!-- ABA 1: OPERAÇÃO DIÁRIA -->
+    <section id="tab-hoje" class="view-section active">
+      <div class="kpi-row">
+        <div class="kpi-tile lg-surface">
+          <div class="kpi-meta">
+            <span>Faturamento do Dia (Bruto)</span>
+            <span class="status-pill pill-positive" id="tagTarifaAtiva">R$ 2,31/un</span>
+          </div>
+          <div class="kpi-number" id="kpiGanhoHojeBruto">R$ 0,00</div>
+          <div class="kpi-foot" id="kpiGanhoHojeLiq">Líquido estimado: R$ 0,00</div>
         </div>
-        <div class="kpi-card liquid-glass">
-          <div class="kpi-label">Semana Atual (Dom-Sáb)</div>
-          <div class="kpi-value" id="kpiSemanaBruto" style="color:var(--accent-cyan)">R$ 639,87</div>
-          <div class="kpi-sub" id="kpiSemanaPct">277 pcts + R$ 20 bônus</div>
+
+        <div class="kpi-tile lg-surface">
+          <div class="kpi-meta">
+            <span>Acumulado Ciclo (08/11 a 14/11)</span>
+            <span>Dom–Sáb</span>
+          </div>
+          <div class="kpi-number" id="kpiSemanaBruto">R$ 559,02</div>
+          <div class="kpi-foot" id="kpiSemanaPct">242 pacotes entregues + R$ 20,00 bônus</div>
+        </div>
+
+        <div class="kpi-tile lg-surface">
+          <div class="kpi-meta">
+            <span>SLA de Qualidade (Meta 98%)</span>
+            <span id="metaPctText" style="font-family:var(--font-mono); font-weight:700;">100.0%</span>
+          </div>
+          <div class="sla-track">
+            <div class="sla-fill" id="metaProgressBar" style="width:100%"></div>
+          </div>
+          <div class="kpi-foot">Avarias e pacotes fora de rota impactam apenas o SLA.</div>
         </div>
       </div>
 
-      <!-- Termômetro 98% -->
-      <div class="meta-banner liquid-glass">
-        <div style="flex:1">
-          <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700;">
-            <span>Meta Performance (Mín. 98%)</span>
-            <span id="metaPctText" style="color:var(--accent-green)">94.6%</span>
+      <div class="bento-grid bento-grid-hoje">
+        <!-- Coluna Esquerda: Lançamento Operacional -->
+        <div class="panel lg-surface">
+          <div class="panel-header">
+            <span class="panel-title">Fechamento Operacional Diário</span>
+            <input type="date" id="inputDataDia" class="input-field input-mono" value="2026-11-13" onchange="carregarDiaSelecionado()" />
           </div>
-          <div class="progress-track">
-            <div class="progress-fill" id="metaProgressBar" style="width:94.6%"></div>
-          </div>
-          <div style="font-size:0.71rem; color:var(--text-secondary); margin-top:5px;" id="metaDetalheText">
-            Fora de rota e danificados penalizam a meta, mas você recebe por todos os entregues.
-          </div>
-        </div>
-      </div>
 
-      <!-- Lançamento Diário -->
-      <div class="section-card liquid-glass">
-        <div class="section-title">
-          <span>Lançamento do Dia</span>
-          <input type="date" id="inputDataDia" class="input-glass" value="2026-11-13" onchange="carregarDiaSelecionado()" />
-        </div>
-
-        <div class="field-row">
-          <div class="field-info">
-            <h4>Entregues Hoje (Rota)</h4>
-            <p>R$ 2,31 bruto | R$ 2,15 líquido</p>
-          </div>
-          <div class="stepper">
-            <button class="btn-circle" onclick="ajustarValor('inputEntregues', -1)">−</button>
-            <input type="number" id="inputEntregues" class="input-glass input-num" value="35" oninput="recalcularDia()" />
-            <button class="btn-circle" onclick="ajustarValor('inputEntregues', 1)">+</button>
-          </div>
-        </div>
-
-        <div class="field-row">
-          <div class="field-info">
-            <h4>Tentar Novamente (Insucesso)</h4>
-            <p>Reentrega no dia seguinte (sem TBR dev.)</p>
-          </div>
-          <div class="stepper">
-            <button class="btn-circle" onclick="ajustarValor('inputTentarNovamente', -1)">−</button>
-            <input type="number" id="inputTentarNovamente" class="input-glass input-num" value="0" oninput="recalcularDia()" />
-            <button class="btn-circle" onclick="ajustarValor('inputTentarNovamente', 1)">+</button>
-          </div>
-        </div>
-
-        <div class="field-row">
-          <div class="field-info">
-            <h4>Devoluções (Fora de Rota / Danif.)</h4>
-            <p>Abate da meta hoje + exige baixa c/ motorista</p>
-          </div>
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span class="badge badge-red" id="badgeTotalDevolucoesDia">2 TBRs</span>
-            <button class="btn-secondary" onclick="abrirModalTBR()">📷 + Foto/TBR</button>
-          </div>
-        </div>
-
-        <!-- Bloco Resgate -->
-        <div class="field-row" style="flex-direction:column; align-items:stretch; gap:8px;">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div class="field-info">
-              <h4>Pacotes de Resgate</h4>
-              <p>Ex: 9 pcts ontem ou resgate de parceiro</p>
+          <div class="control-row">
+            <div class="control-label">
+              <h4>Pacotes Entregues (Rota)</h4>
+              <p>Contabiliza integralmente no faturamento bruto e líquido</p>
             </div>
-            <div class="stepper">
-              <button class="btn-circle" onclick="ajustarValor('inputResgateQtd', -1)">−</button>
-              <input type="number" id="inputResgateQtd" class="input-glass input-num" value="0" oninput="recalcularDia(true)" />
-              <button class="btn-circle" onclick="ajustarValor('inputResgateQtd', 1)">+</button>
+            <div class="stepper-group">
+              <button class="stepper-btn" onclick="ajustarValor('inputEntregues', -1)">−</button>
+              <input type="number" id="inputEntregues" class="input-stepper" value="0" oninput="recalcularDia()" />
+              <button class="stepper-btn" onclick="ajustarValor('inputEntregues', 1)">+</button>
             </div>
           </div>
-          <div id="boxDetalhesResgate" style="display:grid; grid-template-columns: 1fr 110px; gap:8px; margin-top:4px;">
-            <input type="text" id="inputResgateOrigem" class="input-glass" placeholder="De quem? (Ex: Estação, Michel)" />
-            <input type="number" step="0.01" id="inputResgateValor" class="input-glass" placeholder="R$ Total" oninput="recalcularDia(false)" />
+
+          <div class="control-row">
+            <div class="control-label">
+              <h4>Tentar Novamente (Insucesso)</h4>
+              <p>Reentrega programada para o próximo dia útil</p>
+            </div>
+            <div class="stepper-group">
+              <button class="stepper-btn" onclick="ajustarValor('inputTentarNovamente', -1)">−</button>
+              <input type="number" id="inputTentarNovamente" class="input-stepper" value="0" oninput="recalcularDia()" />
+              <button class="stepper-btn" onclick="ajustarValor('inputTentarNovamente', 1)">+</button>
+            </div>
           </div>
+
+          <div class="control-row">
+            <div class="control-label">
+              <h4>Devoluções (Fora de Rota / Danificado)</h4>
+              <p>Registra evidência fotográfica e código TBR para baixa física</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span class="status-pill pill-danger" id="badgeTotalDevolucoesDia">0 TBRs</span>
+              <button class="btn-ghost" onclick="abrirModalTBR()">+ Registrar TBR</button>
+            </div>
+          </div>
+
+          <div class="control-row" style="flex-direction:column; align-items:stretch;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div class="control-label">
+                <h4>Operação de Resgate</h4>
+                <p>Volume adicional absorvido de outro parceiro ou estação</p>
+              </div>
+              <div class="stepper-group">
+                <button class="stepper-btn" onclick="ajustarValor('inputResgateQtd', -1)">−</button>
+                <input type="number" id="inputResgateQtd" class="input-stepper" value="0" oninput="recalcularDia(true)" />
+                <button class="stepper-btn" onclick="ajustarValor('inputResgateQtd', 1)">+</button>
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 130px; gap:10px; margin-top:10px;">
+              <input type="text" id="inputResgateOrigem" class="input-field" placeholder="Digite aqui o HUB ofensor" />
+              <input type="number" step="0.01" id="inputResgateValor" class="input-field input-mono" placeholder="R$ Total" oninput="recalcularDia(false)" />
+            </div>
+          </div>
+
+          <div class="control-row">
+            <div class="control-label">
+              <h4>Bônus Negociado no Dia (R$)</h4>
+              <p>Entra na auditoria de bônus até ser quitado na nota</p>
+            </div>
+            <input type="number" step="0.01" id="inputBonusDia" class="input-field input-mono" style="width:110px; text-align:right;" value="0" oninput="recalcularDia()" />
+          </div>
+
+          <div class="control-row">
+            <div class="control-label">
+              <h4>Dia de Folga Programada</h4>
+              <p>Isenta o dia de impacto no cálculo de performance</p>
+            </div>
+            <input type="checkbox" id="checkFolga" style="width:18px; height:18px; accent-color: var(--accent-primary);" onchange="recalcularDia()" />
+          </div>
+
+          <button class="btn-exec" onclick="salvarLancamentoDia()">Salvar Fechamento Operacional</button>
         </div>
 
-        <!-- Bônus do Dia -->
-        <div class="field-row">
-          <div class="field-info">
-            <h4>Bônus Ofertado no Dia (R$)</h4>
-            <p>Fica pendente até sair na nota de terça</p>
+        <!-- Coluna Direita: Resumo Rápido da Semana e Pendências -->
+        <div>
+          <div class="panel lg-surface">
+            <div class="panel-header">
+              <span class="panel-title">Fila de Devolução Física (TBRs Pendentes)</span>
+              <button class="btn-ghost" onclick="mudarAba('tbr')">Ver Todos</button>
+            </div>
+            <div id="resumoTbrHojeContainer"></div>
           </div>
-          <input type="number" step="0.01" id="inputBonusDia" class="input-glass" style="width:100px; text-align:right;" value="0" oninput="recalcularDia()" />
-        </div>
 
-        <!-- Folga -->
-        <div class="field-row">
-          <div class="field-info">
-            <h4>Dia de Folga</h4>
-            <p>Zera metas do dia sem penalizar</p>
+          <div class="panel lg-surface">
+            <div class="panel-header">
+              <span class="panel-title">Últimos Lançamentos do Ciclo</span>
+            </div>
+            <div id="resumoUltimosDiasContainer"></div>
           </div>
-          <input type="checkbox" id="checkFolga" style="width:22px; height:22px;" onchange="recalcularDia()" />
         </div>
-
-        <button class="btn-primary" onclick="salvarLancamentoDia()">💾 Salvar Fechamento do Dia</button>
       </div>
     </section>
 
-    <!-- ABA 2: DEVOLUÇÕES & TBR -->
-    <section id="tab-tbr" class="tab-view">
-      <div class="section-card liquid-glass">
-        <div class="section-title">
-          <span>🔍 Rastreador de TBRs</span>
-          <button class="btn-secondary" onclick="abrirModalTBR()">📷 Novo TBR</button>
+    <!-- ABA 2: AUDITORIA DE TBRs -->
+    <section id="tab-tbr" class="view-section">
+      <div class="panel lg-surface">
+        <div class="panel-header">
+          <span class="panel-title">Rastreio e Custódia de TBRs Devolvidos</span>
+          <button class="btn-ghost" onclick="abrirModalTBR()">+ Registrar TBR</button>
         </div>
-        <input type="text" id="inputBuscaTBR" class="input-glass" style="width:100%; margin-bottom:14px;" placeholder="Buscar por código TBR, data ou motorista..." oninput="renderizarListaTBR()" />
-
+        <input type="text" id="inputBuscaTBR" class="input-field" style="width:100%; margin-bottom:16px;" placeholder="Pesquisar por código TBR (9 a 11 dígitos), data ou nome do motorista..." oninput="renderizarListaTBR()" />
         <div id="listaTBRContainer"></div>
       </div>
     </section>
 
-    <!-- ABA 3: FINANCEIRO, NOTAS & BÔNUS -->
-    <section id="tab-financeiro" class="tab-view">
-      <div class="kpi-grid">
-        <div class="kpi-card liquid-glass">
-          <div class="kpi-label">A Receber (Notas + Bônus)</div>
-          <div class="kpi-value" id="finTotalAReceber" style="color:var(--accent-amber)">R$ 689,87</div>
-          <div class="kpi-sub" id="finTotalAReceberLiq">Ciclo 08/11 + R$ 50 bônus</div>
+    <!-- ABA 3: FINANCEIRO, AUDITORIA DE BÔNUS & NOTAS -->
+    <section id="tab-financeiro" class="view-section">
+      <div class="kpi-row">
+        <div class="kpi-tile lg-surface">
+          <div class="kpi-meta"><span>Saldo Total A Receber</span></div>
+          <div class="kpi-number" id="finTotalAReceber" style="color:var(--status-warning)">R$ 0,00</div>
+          <div class="kpi-foot" id="finSubAReceber">Ciclo aberto + saldo de bônus não quitados</div>
         </div>
-        <div class="kpi-card liquid-glass">
-          <div class="kpi-label">Total Já Pago (Notas PDF)</div>
-          <div class="kpi-value" id="finTotalPago" style="color:var(--accent-green)">R$ 2.868,11</div>
-          <div class="kpi-sub">9 Declarações de Lucro</div>
+        <div class="kpi-tile lg-surface">
+          <div class="kpi-meta"><span>Bônus Pendentes de Pagamento</span></div>
+          <div class="kpi-number" id="finBonusPendente" style="color:var(--status-danger)">R$ 140,00</div>
+          <div class="kpi-foot">Abatimento parcial disponível por lançamento</div>
+        </div>
+        <div class="kpi-tile lg-surface">
+          <div class="kpi-meta"><span>Total Liquidado (Declarações PDF)</span></div>
+          <div class="kpi-number" id="finTotalPago" style="color:var(--status-positive)">R$ 2.868,11</div>
+          <div class="kpi-foot">9 notas fiscais conciliadas</div>
         </div>
       </div>
 
-      <!-- Bônus Pendentes de Pagamento -->
-      <div class="section-card liquid-glass">
-        <div class="section-title">
-          <span>⚠️ Bônus Ofertados (Pendentes após 24/10)</span>
+      <div class="bento-grid bento-grid-2col">
+        <!-- Auditoria de Bônus com Pagamento Parcial -->
+        <div class="panel lg-surface">
+          <div class="panel-header">
+            <span class="panel-title">Auditoria de Bônus (Controle de Pagamento Parcial)</span>
+          </div>
+          <p style="font-size:0.76rem; color:var(--text-secondary); margin-bottom:14px;">
+            Informe exatamente quanto foi pago de cada bônus ofertado. O saldo restante permanece em cobrança automática.
+          </p>
+          <div id="listaBonusPendentes"></div>
         </div>
-        <div id="listaBonusPendentes"></div>
-      </div>
 
-      <!-- Notas Fiscais Semanais e de Bônus -->
-      <div class="section-card liquid-glass">
-        <div class="section-title">
-          <span>🧾 Declarações de Lucros / Notas (NF)</span>
+        <!-- Declarações de Lucros -->
+        <div class="panel lg-surface">
+          <div class="panel-header">
+            <span class="panel-title">Declarações de Lucros & Faturas Semanais</span>
+          </div>
+          <div id="listaNotasSemanais"></div>
         </div>
-        <div id="listaNotasSemanais"></div>
       </div>
     </section>
 
-    <!-- ABA 4: INDICAÇÕES (R$ 250 EM 2 PARCELAS) -->
-    <section id="tab-indicacoes" class="tab-view">
-      <div class="section-card liquid-glass">
-        <div class="section-title">
-          <span>🤝 Bônus de Indicação (R$ 250)</span>
-          <button class="btn-secondary" onclick="adicionarIndicacaoPrompt()">+ Indicado</button>
+    <!-- ABA 4: INDICAÇÕES -->
+    <section id="tab-indicacoes" class="view-section">
+      <div class="panel lg-surface">
+        <div class="panel-header">
+          <span class="panel-title">Programa de Indicação de Parceiros (R$ 250,00)</span>
+          <button class="btn-ghost" onclick="adicionarIndicacaoPrompt()">+ Novo Indicado</button>
         </div>
-        <p style="font-size:0.78rem; color:var(--text-secondary); margin-bottom:14px;">
-          Dividido em 2 notas de R$ 125,00: 1ª quando o parceiro inicia e 2ª ao completar 30 dias.
+        <p style="font-size:0.78rem; color:var(--text-secondary); margin-bottom:16px;">
+          Repasse dividido em duas parcelas de R$ 125,00: a 1ª na ativação do parceiro e a 2ª após 30 dias de operação.
         </p>
-        <div id="listaIndicacoesContainer"></div>
+        <div id="listaIndicacoesContainer" class="bento-grid bento-grid-2col"></div>
       </div>
     </section>
 
-    <!-- ABA 5: HISTÓRICO & CONFIG -->
-    <section id="tab-config" class="tab-view">
-      <div class="section-card liquid-glass">
-        <div class="section-title"><span>⚙️ Conexão Google Sheets & Tarifas</span></div>
-        <div style="margin-bottom:12px;">
-          <label style="font-size:0.78rem; color:var(--text-secondary);">URL do Web App (Google Apps Script)</label>
-          <input type="text" id="inputScriptUrl" class="input-glass" style="width:100%; margin-top:6px;" value="https://script.google.com/macros/s/AKfycbySoITRQ5YHnR0MPjfZiJ4pqFJIrKwoPCPkxuIbVbr6cYSQrgD0M4vTYKDDjfTELW9V/exec" onchange="salvarConfigLocal()" />
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
-          <div>
-            <label style="font-size:0.75rem; color:var(--text-secondary);">Valor Bruto / Pacote (R$)</label>
-            <input type="number" step="0.01" id="cfgBruto" class="input-glass" style="width:100%; margin-top:4px;" value="2.31" onchange="salvarConfigLocal()" />
+    <!-- ABA 5: HISTÓRICO & CONFIGURAÇÕES -->
+    <section id="tab-config" class="view-section">
+      <div class="bento-grid bento-grid-2col">
+        <div class="panel lg-surface">
+          <div class="panel-header">
+            <span class="panel-title">Parâmetros Operacionais & Integração</span>
           </div>
-          <div>
-            <label style="font-size:0.75rem; color:var(--text-secondary);">Valor Líquido / Pacote (R$)</label>
-            <input type="number" step="0.01" id="cfgLiquido" class="input-glass" style="width:100%; margin-top:4px;" value="2.15" onchange="salvarConfigLocal()" />
+          <div style="margin-bottom:14px;">
+            <label style="font-size:0.75rem; color:var(--text-secondary);">Endpoint Google Apps Script</label>
+            <input type="text" id="inputScriptUrl" class="input-field input-mono" style="width:100%; margin-top:6px;" onchange="salvarConfigLocal()" />
           </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+            <div>
+              <label style="font-size:0.75rem; color:var(--text-secondary);">Tarifa Bruta (R$)</label>
+              <input type="number" step="0.01" id="cfgBruto" class="input-field input-mono" style="width:100%; margin-top:6px;" value="2.31" onchange="salvarConfigLocal()" />
+            </div>
+            <div>
+              <label style="font-size:0.75rem; color:var(--text-secondary);">Tarifa Líquida (R$)</label>
+              <input type="number" step="0.01" id="cfgLiquido" class="input-field input-mono" style="width:100%; margin-top:6px;" value="2.15" onchange="salvarConfigLocal()" />
+            </div>
+          </div>
+          <div style="margin-bottom:14px;">
+            <label style="font-size:0.75rem; color:var(--text-secondary);">Modalidade de Coleta</label>
+            <select id="cfgModalidade" class="input-field" style="width:100%; margin-top:6px;" onchange="salvarConfigLocal()">
+              <option value="Milk Run" selected>Milk Run (Entrega na Base)</option>
+              <option value="Safe Hut">Safe Hut (Coleta Externa)</option>
+            </select>
+          </div>
+          <button class="btn-ghost" style="width:100%; justify-content:center; margin-top:6px;" onclick="restaurarPadraoLimpo()">
+            Recarregar Base Limpa (Zerar 13/11 e TBRs)
+          </button>
         </div>
-        <div style="margin-bottom:12px;">
-          <label style="font-size:0.75rem; color:var(--text-secondary);">Modalidade de Recebimento</label>
-          <select id="cfgModalidade" class="input-glass" style="width:100%; margin-top:4px;" onchange="salvarConfigLocal()">
-            <option value="Milk Run" selected>Milk Run (Recebimento no Endereço)</option>
-            <option value="Safe Hut">Safe Hut (Retirada c/ Benefício Mensal)</option>
-          </select>
-        </div>
-      </div>
 
-      <div class="section-card liquid-glass">
-        <div class="section-title"><span>📅 Histórico Diário Completo (Out/Nov)</span></div>
-        <div id="listaHistoricoDiario"></div>
+        <div class="panel lg-surface">
+          <div class="panel-header">
+            <span class="panel-title">Registro Histórico Completo (Outubro / Novembro)</span>
+          </div>
+          <div id="listaHistoricoDiario"></div>
+        </div>
       </div>
     </section>
   </div>
 
-  <!-- MODAL CÂMERA + SCANNER TBR -->
-  <div class="modal-backdrop" id="modalTBR">
-    <div class="modal-box liquid-glass">
-      <div class="section-title">
-        <span>📷 Registrar Pacote p/ Devolução</span>
-        <button class="btn-secondary" onclick="fecharModalTBR()">✕</button>
+  <!-- MODAL DE CAPTURA TBR -->
+  <div class="modal-overlay" id="modalTBR">
+    <div class="modal-card lg-surface">
+      <div class="panel-header">
+        <span class="panel-title">Registrar Pacote para Devolução</span>
+        <button class="btn-ghost" onclick="fecharModalTBR()">Fechar</button>
       </div>
 
       <div id="reader"></div>
 
-      <div style="display:flex; gap:8px; margin-bottom:12px;">
-        <button class="btn-secondary" style="flex:1" onclick="iniciarLeitorCodigo()">🔍 Ler Código de Barras</button>
-        <label class="btn-secondary" style="flex:1; text-align:center; cursor:pointer;">
-          📸 Tirar Foto Pacote
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+        <button class="btn-ghost" style="justify-content:center;" onclick="iniciarLeitorCodigo()">Ler Código de Barras</button>
+        <label class="btn-ghost" style="justify-content:center; cursor:pointer;">
+          Fotografar Etiqueta
           <input type="file" accept="image/*" capture="environment" style="display:none" onchange="capturarFotoPacote(event)" />
         </label>
       </div>
 
-      <img id="imgPreviewTBR" class="preview-img" alt="Foto do pacote" />
+      <img id="imgPreviewTBR" class="preview-img" alt="Evidência TBR" />
 
-      <div style="margin-top:10px;">
-        <label style="font-size:0.76rem; color:var(--text-secondary);">Código TBR (TBR + 9 a 11 dígitos)</label>
-        <input type="text" id="inputCodigoTBR" class="input-glass" style="width:100%; margin-top:4px; text-transform:uppercase;" placeholder="Ex: TBR464110140" value="TBR" />
+      <div style="margin-top:12px;">
+        <label style="font-size:0.74rem; color:var(--text-secondary);">Código TBR (Padrão TBR + 9 a 11 dígitos)</label>
+        <input type="text" id="inputCodigoTBR" class="input-field input-mono" style="width:100%; margin-top:5px; text-transform:uppercase;" placeholder="TBR000000000" value="TBR" />
       </div>
 
-      <div style="margin-top:10px;">
-        <label style="font-size:0.76rem; color:var(--text-secondary);">Motivo da Devolução</label>
-        <select id="selectMotivoTBR" class="input-glass" style="width:100%; margin-top:4px;">
+      <div style="margin-top:12px;">
+        <label style="font-size:0.74rem; color:var(--text-secondary);">Classificação da Ocorrência</label>
+        <select id="selectMotivoTBR" class="input-field" style="width:100%; margin-top:5px;">
           <option value="Fora de Rota">Fora de Rota</option>
-          <option value="Danificado">Pacote Danificado</option>
+          <option value="Danificado">Avaria / Danificado</option>
         </select>
       </div>
 
-      <div style="margin-top:10px;">
-        <label style="font-size:0.76rem; color:var(--text-secondary);">Observação / Driver Aid (Opcional)</label>
-        <input type="text" id="inputObsTBR" class="input-glass" style="width:100%; margin-top:4px;" placeholder="Ex: Etiqueta amarela 034 / Guará" />
+      <div style="margin-top:12px;">
+        <label style="font-size:0.74rem; color:var(--text-secondary);">Identificação Auxiliar (Driver Aid / Endereço)</label>
+        <input type="text" id="inputObsTBR" class="input-field" style="width:100%; margin-top:5px;" placeholder="Ex: Etiqueta amarela 034" />
       </div>
 
-      <button class="btn-primary" onclick="confirmarRegistroTBR()">✅ Salvar TBR na Fila de Devolução</button>
+      <button class="btn-exec" onclick="confirmarRegistroTBR()">Confirmar Inclusão de TBR</button>
     </div>
   </div>
 
-  <!-- MODAL BAIXA DE DEVOLUÇÃO AO MOTORISTA -->
-  <div class="modal-backdrop" id="modalBaixaMotorista">
-    <div class="modal-box liquid-glass">
-      <div class="section-title">
-        <span>🚚 Confirmar Entrega ao Motorista</span>
-        <button class="btn-secondary" onclick="fecharModalBaixa()">✕</button>
+  <!-- MODAL DE BAIXA COM MOTORISTA -->
+  <div class="modal-overlay" id="modalBaixaMotorista">
+    <div class="modal-card lg-surface">
+      <div class="panel-header">
+        <span class="panel-title">Comprovação de Devolução Física</span>
+        <button class="btn-ghost" onclick="fecharModalBaixa()">Fechar</button>
       </div>
-      <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:12px;">
-        O pacote continuará descontado do dia em que foi recebido, mas ficará registrado como devolvido hoje para sua proteção.
+      <p style="font-size:0.78rem; color:var(--text-secondary); margin-bottom:14px;">
+        O pacote permanece descontado no dia original do recebimento e passa a constar como entregue ao motorista abaixo.
       </p>
       <input type="hidden" id="baixaTbrId" />
-      <div style="margin-bottom:10px;">
-        <label style="font-size:0.76rem; color:var(--text-secondary);">Nome do Motorista que recolheu</label>
-        <input type="text" id="inputMotoristaNome" class="input-glass" style="width:100%; margin-top:4px;" placeholder="Ex: Motorista João (Milk Run)" />
+      <div style="margin-bottom:12px;">
+        <label style="font-size:0.74rem; color:var(--text-secondary);">Motorista Recebedor (Milk Run / Coleta)</label>
+        <input type="text" id="inputMotoristaNome" class="input-field" style="width:100%; margin-top:5px;" placeholder="Nome completo ou apelido do motorista" />
       </div>
-      <div style="margin-bottom:10px;">
-        <label style="font-size:0.76rem; color:var(--text-secondary);">Data da Devolução Física</label>
-        <input type="date" id="inputDataBaixa" class="input-glass" style="width:100%; margin-top:4px;" value="2026-11-14" />
+      <div style="margin-bottom:12px;">
+        <label style="font-size:0.74rem; color:var(--text-secondary);">Data da Coleta</label>
+        <input type="date" id="inputDataBaixa" class="input-field input-mono" style="width:100%; margin-top:5px;" value="2026-11-13" />
       </div>
-      <button class="btn-primary" onclick="confirmarBaixaMotorista()">✅ Confirmar Devolução</button>
+      <button class="btn-exec" onclick="confirmarBaixaMotorista()">Registrar Baixa de Custódia</button>
     </div>
   </div>
 
-  <!-- DOCK INFERIOR LIQUID GLASS -->
-  <nav class="bottom-dock liquid-glass">
-    <button class="tab-btn active" onclick="mudarAba('hoje', this)"><span>📦</span>Hoje</button>
-    <button class="tab-btn" onclick="mudarAba('tbr', this)"><span>🔍</span>TBRs</button>
-    <button class="tab-btn" onclick="mudarAba('financeiro', this)"><span>💰</span>Notas</button>
-    <button class="tab-btn" onclick="mudarAba('indicacoes', this)"><span>🤝</span>Indicações</button>
-    <button class="tab-btn" onclick="mudarAba('config', this)"><span>⚙️</span>Histórico</button>
+  <!-- DOCK INFERIOR MOBILE -->
+  <nav class="bottom-dock lg-pill">
+    <button class="nav-item active" data-target="hoje" onclick="mudarAba('hoje')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+      Operação
+    </button>
+    <button class="nav-item" data-target="tbr" onclick="mudarAba('tbr')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></svg>
+      TBRs
+    </button>
+    <button class="nav-item" data-target="financeiro" onclick="mudarAba('financeiro')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Recebíveis
+    </button>
+    <button class="nav-item" data-target="indicacoes" onclick="mudarAba('indicacoes')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Indicações
+    </button>
+    <button class="nav-item" data-target="config" onclick="mudarAba('config')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Histórico
+    </button>
   </nav>
 
   <script>
     const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbySoITRQ5YHnR0MPjfZiJ4pqFJIrKwoPCPkxuIbVbr6cYSQrgD0M4vTYKDDjfTELW9V/exec";
 
-    // BASE DE DADOS PRÉ-CARREGADA
+    // BASE ATUALIZADA:
+    // - Sem o dia 13/11 (para alimentação manual)
+    // - Fila de TBRs zerada
+    // - Bônus 27/10 (R$ 30) PAGO
+    // - Bônus 24/10 (R$ 120 resgate Michel e Rodrigo) NÃO PAGO e com suporte a pagamento parcial (Bonus_Pago)
     const ESTADO_INICIAL = {
       config: {
         tarifaBruta: 2.31,
         tarifaLiquida: 2.15,
         modalidade: "Milk Run",
-        scriptUrl: DEFAULT_SCRIPT_URL
+        scriptUrl: DEFAULT_SCRIPT_URL,
+        themePref: "auto"
       },
       entregas: [
-        { Data: "2026-10-07", Semana_Ciclo: "04/10 a 10/10", Entregues_Normal: 2, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 80, Bonus_Status: "Pago", Valor_Bruto_Dia: 4.62, Valor_Liquido_Dia: 4.30, Folga: false },
-        { Data: "2026-10-08", Semana_Ciclo: "04/10 a 10/10", Entregues_Normal: 2, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 40, Bonus_Status: "Pago", Valor_Bruto_Dia: 4.62, Valor_Liquido_Dia: 4.30, Folga: false },
-        { Data: "2026-10-09", Semana_Ciclo: "04/10 a 10/10", Entregues_Normal: 18, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 30, Bonus_Status: "Pago", Valor_Bruto_Dia: 41.58, Valor_Liquido_Dia: 38.70, Folga: false },
-        { Data: "2026-10-10", Semana_Ciclo: "04/10 a 10/10", Entregues_Normal: 9, Tentar_Novamente: 9, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 43, Resgate_Origem: "Resgate (52 c/ 9 insuc.)", Resgate_Valor_Bruto: 99.33, Bonus_Ofertado: 75, Bonus_Status: "Pago", Valor_Bruto_Dia: 120.12, Valor_Liquido_Dia: 111.80, Folga: false },
-        { Data: "2026-10-11", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 26, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 50, Bonus_Status: "Pago", Valor_Bruto_Dia: 60.06, Valor_Liquido_Dia: 55.90, Folga: false },
-        { Data: "2026-10-13", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 15, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 34.65, Valor_Liquido_Dia: 32.25, Folga: false },
-        { Data: "2026-10-14", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 0, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 0, Valor_Liquido_Dia: 0, Folga: true },
-        { Data: "2026-10-15", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 14, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 32.34, Valor_Liquido_Dia: 30.10, Folga: false },
-        { Data: "2026-10-16", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 0, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 0, Valor_Liquido_Dia: 0, Folga: true },
-        { Data: "2026-10-17", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 60, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 8, Resgate_Origem: "Resgate", Resgate_Valor_Bruto: 18.48, Bonus_Ofertado: 50, Bonus_Status: "Pago", Valor_Bruto_Dia: 157.08, Valor_Liquido_Dia: 146.20, Folga: false },
-        { Data: "2026-10-18", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 58, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 30, Bonus_Status: "Pago", Valor_Bruto_Dia: 133.98, Valor_Liquido_Dia: 124.70, Folga: false },
-        { Data: "2026-10-19", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 23, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 53.13, Valor_Liquido_Dia: 49.45, Folga: false },
-        { Data: "2026-10-20", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 20, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 50, Bonus_Status: "Pago", Valor_Bruto_Dia: 46.20, Valor_Liquido_Dia: 43.00, Folga: false },
-        { Data: "2026-10-21", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 27, Tentar_Novamente: 3, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 62.37, Valor_Liquido_Dia: 58.05, Folga: false },
-        { Data: "2026-10-22", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 61, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 140.91, Valor_Liquido_Dia: 131.15, Folga: false },
-        { Data: "2026-10-23", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 32, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 50, Bonus_Status: "Pago", Valor_Bruto_Dia: 73.92, Valor_Liquido_Dia: 68.80, Folga: false },
-        { Data: "2026-10-24", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 32, Tentar_Novamente: 0, Fora_De_Rota: 4, Danificados: 0, Resgate_Qtd: 56, Resgate_Origem: "Michel (20) + Extra (36)", Resgate_Valor_Bruto: 122.60, Bonus_Ofertado: 120, Bonus_Status: "Pago", Valor_Bruto_Dia: 196.52, Valor_Liquido_Dia: 189.20, Folga: false },
-        { Data: "2026-10-25", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 60, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 138.60, Valor_Liquido_Dia: 129.00, Folga: false },
-        { Data: "2026-10-26", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 0, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 0, Valor_Liquido_Dia: 0, Folga: true },
-        { Data: "2026-10-27", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 40, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 30, Bonus_Status: "A Receber", Valor_Bruto_Dia: 92.40, Valor_Liquido_Dia: 86.00, Folga: false },
-        { Data: "2026-10-28", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 36, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 83.16, Valor_Liquido_Dia: 77.40, Folga: false },
-        { Data: "2026-10-29", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 59, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 136.29, Valor_Liquido_Dia: 126.85, Folga: false },
-        { Data: "2026-10-30", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 47, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 108.57, Valor_Liquido_Dia: 101.05, Folga: false },
-        { Data: "2026-10-31", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 46, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 106.26, Valor_Liquido_Dia: 98.90, Folga: false },
-        { Data: "2026-11-01", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 18, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 41.58, Valor_Liquido_Dia: 38.70, Folga: false },
-        { Data: "2026-11-02", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 48, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 110.88, Valor_Liquido_Dia: 103.20, Folga: false },
-        { Data: "2026-11-03", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 42, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 97.02, Valor_Liquido_Dia: 90.30, Folga: false },
-        { Data: "2026-11-04", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 43, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 99.33, Valor_Liquido_Dia: 92.45, Folga: false },
-        { Data: "2026-11-05", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 40, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 92.40, Valor_Liquido_Dia: 86.00, Folga: false },
-        { Data: "2026-11-06", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 41, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 94.71, Valor_Liquido_Dia: 88.15, Folga: false },
-        { Data: "2026-11-08", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 46, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 106.26, Valor_Liquido_Dia: 98.90, Folga: false },
-        { Data: "2026-11-09", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 58, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 133.98, Valor_Liquido_Dia: 124.70, Folga: false },
-        { Data: "2026-11-10", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 43, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 99.33, Valor_Liquido_Dia: 92.45, Folga: false },
-        { Data: "2026-11-11", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 58, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 133.98, Valor_Liquido_Dia: 124.70, Folga: false },
-        { Data: "2026-11-12", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 28, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 9, Resgate_Origem: "Resgate", Resgate_Valor_Bruto: 20.79, Bonus_Ofertado: 20, Bonus_Status: "A Receber", Valor_Bruto_Dia: 85.47, Valor_Liquido_Dia: 79.55, Folga: false },
-        { Data: "2026-11-13", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 35, Tentar_Novamente: 0, Fora_De_Rota: 2, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Status: "-", Valor_Bruto_Dia: 80.85, Valor_Liquido_Dia: 75.25, Folga: false }
+        { Data: "2026-10-07", Semana_Ciclo: "04/10 a 10/10", Entregues_Normal: 2, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 80, Bonus_Pago: 80, Bonus_Status: "Pago", Valor_Bruto_Dia: 4.62, Valor_Liquido_Dia: 4.30, Folga: false },
+        { Data: "2026-10-08", Semana_Ciclo: "04/10 a 10/10", Entregues_Normal: 2, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 40, Bonus_Pago: 40, Bonus_Status: "Pago", Valor_Bruto_Dia: 4.62, Valor_Liquido_Dia: 4.30, Folga: false },
+        { Data: "2026-10-09", Semana_Ciclo: "04/10 a 10/10", Entregues_Normal: 18, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 30, Bonus_Pago: 30, Bonus_Status: "Pago", Valor_Bruto_Dia: 41.58, Valor_Liquido_Dia: 38.70, Folga: false },
+        { Data: "2026-10-10", Semana_Ciclo: "04/10 a 10/10", Entregues_Normal: 9, Tentar_Novamente: 9, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 43, Resgate_Origem: "Estação (52 c/ 9 insuc.)", Resgate_Valor_Bruto: 99.33, Bonus_Ofertado: 75, Bonus_Pago: 75, Bonus_Status: "Pago", Valor_Bruto_Dia: 120.12, Valor_Liquido_Dia: 111.80, Folga: false },
+        { Data: "2026-10-11", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 26, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 50, Bonus_Pago: 50, Bonus_Status: "Pago", Valor_Bruto_Dia: 60.06, Valor_Liquido_Dia: 55.90, Folga: false },
+        { Data: "2026-10-13", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 15, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 34.65, Valor_Liquido_Dia: 32.25, Folga: false },
+        { Data: "2026-10-14", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 0, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 0, Valor_Liquido_Dia: 0, Folga: true },
+        { Data: "2026-10-15", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 14, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 32.34, Valor_Liquido_Dia: 30.10, Folga: false },
+        { Data: "2026-10-16", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 0, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 0, Valor_Liquido_Dia: 0, Folga: true },
+        { Data: "2026-10-17", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 60, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 8, Resgate_Origem: "HUB Ofensor", Resgate_Valor_Bruto: 18.48, Bonus_Ofertado: 50, Bonus_Pago: 50, Bonus_Status: "Pago", Valor_Bruto_Dia: 157.08, Valor_Liquido_Dia: 146.20, Folga: false },
+        { Data: "2026-10-18", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 58, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 30, Bonus_Pago: 30, Bonus_Status: "Pago", Valor_Bruto_Dia: 133.98, Valor_Liquido_Dia: 124.70, Folga: false },
+        { Data: "2026-10-19", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 23, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 53.13, Valor_Liquido_Dia: 49.45, Folga: false },
+        { Data: "2026-10-20", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 20, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 50, Bonus_Pago: 50, Bonus_Status: "Pago", Valor_Bruto_Dia: 46.20, Valor_Liquido_Dia: 43.00, Folga: false },
+        { Data: "2026-10-21", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 27, Tentar_Novamente: 3, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 62.37, Valor_Liquido_Dia: 58.05, Folga: false },
+        { Data: "2026-10-22", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 61, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 140.91, Valor_Liquido_Dia: 131.15, Folga: false },
+        { Data: "2026-10-23", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 32, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 50, Bonus_Pago: 50, Bonus_Status: "Pago", Valor_Bruto_Dia: 73.92, Valor_Liquido_Dia: 68.80, Folga: false },
+        { Data: "2026-10-24", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 32, Tentar_Novamente: 0, Fora_De_Rota: 4, Danificados: 0, Resgate_Qtd: 56, Resgate_Origem: "Michel (20) + Rodrigo (36)", Resgate_Valor_Bruto: 122.60, Bonus_Ofertado: 120, Bonus_Pago: 0, Bonus_Status: "A Receber", Valor_Bruto_Dia: 196.52, Valor_Liquido_Dia: 189.20, Folga: false },
+        { Data: "2026-10-25", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 60, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 138.60, Valor_Liquido_Dia: 129.00, Folga: false },
+        { Data: "2026-10-26", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 0, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 0, Valor_Liquido_Dia: 0, Folga: true },
+        { Data: "2026-10-27", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 40, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 30, Bonus_Pago: 30, Bonus_Status: "Pago", Valor_Bruto_Dia: 92.40, Valor_Liquido_Dia: 86.00, Folga: false },
+        { Data: "2026-10-28", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 36, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 83.16, Valor_Liquido_Dia: 77.40, Folga: false },
+        { Data: "2026-10-29", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 59, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 136.29, Valor_Liquido_Dia: 126.85, Folga: false },
+        { Data: "2026-10-30", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 47, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 108.57, Valor_Liquido_Dia: 101.05, Folga: false },
+        { Data: "2026-10-31", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 46, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 106.26, Valor_Liquido_Dia: 98.90, Folga: false },
+        { Data: "2026-11-01", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 18, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 41.58, Valor_Liquido_Dia: 38.70, Folga: false },
+        { Data: "2026-11-02", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 48, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 110.88, Valor_Liquido_Dia: 103.20, Folga: false },
+        { Data: "2026-11-03", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 42, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 97.02, Valor_Liquido_Dia: 90.30, Folga: false },
+        { Data: "2026-11-04", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 43, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 99.33, Valor_Liquido_Dia: 92.45, Folga: false },
+        { Data: "2026-11-05", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 40, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 92.40, Valor_Liquido_Dia: 86.00, Folga: false },
+        { Data: "2026-11-06", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 41, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 94.71, Valor_Liquido_Dia: 88.15, Folga: false },
+        { Data: "2026-11-08", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 46, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 106.26, Valor_Liquido_Dia: 98.90, Folga: false },
+        { Data: "2026-11-09", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 58, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 133.98, Valor_Liquido_Dia: 124.70, Folga: false },
+        { Data: "2026-11-10", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 43, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 99.33, Valor_Liquido_Dia: 92.45, Folga: false },
+        { Data: "2026-11-11", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 58, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 133.98, Valor_Liquido_Dia: 124.70, Folga: false },
+        { Data: "2026-11-12", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 28, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 9, Resgate_Origem: "HUB Ofensor", Resgate_Valor_Bruto: 20.79, Bonus_Ofertado: 20, Bonus_Pago: 0, Bonus_Status: "A Receber", Valor_Bruto_Dia: 85.47, Valor_Liquido_Dia: 79.55, Folga: false }
       ],
-      devolucoes: [
-        { ID: "TBR-1", Mes_Ref: "2026-11", Semana_Ciclo: "08/11 a 14/11", Data_Recebimento: "2026-11-13", TBR: "TBR464110140", Motivo: "Fora de Rota", Status_Devolucao: "Pendente", Data_Devolucao: "", Motorista_Recebedor: "", Foto_Drive_URL: "", Observacoes: "SQPS 101 Lote C 101 - Driver Aid 034" },
-        { ID: "TBR-2", Mes_Ref: "2026-11", Semana_Ciclo: "08/11 a 14/11", Data_Recebimento: "2026-11-13", TBR: "TBR461466799", Motivo: "Fora de Rota", Status_Devolucao: "Pendente", Data_Devolucao: "", Motorista_Recebedor: "", Foto_Drive_URL: "", Observacoes: "SQPS 101 S/N - Driver Aid 056" }
-      ],
+      devolucoes: [],
       notas: [
         { ID_Nota: "D7B18BE733FF49E4962A4F9DCC1D7B3E", Tipo: "Entregas", Periodo_Servico: "04/10 a 10/10", Data_Emissao: "2026-10-11", Pacotes_Anotados: 74, Pacotes_Nota_Amazon: 66, Valor_Bruto: 152.47, Valor_Liquido: 138.36, Status: "Pago" },
         { ID_Nota: "E247715F20E241D29FA3CEC0ABE81EBE", Tipo: "Entregas", Periodo_Servico: "11/10 a 17/10", Data_Emissao: "2026-10-18", Pacotes_Anotados: 123, Pacotes_Nota_Amazon: 124, Valor_Bruto: 286.44, Valor_Liquido: 264.97, Status: "Pago" },
@@ -734,7 +1038,7 @@
         { ID_Nota: "180138CD85524CEC8DD7B2FD60B0404D", Tipo: "Bônus", Periodo_Servico: "03/11/2026", Data_Emissao: "2026-11-03", Pacotes_Anotados: 0, Pacotes_Nota_Amazon: 1, Valor_Bruto: 80.00, Valor_Liquido: 74.45, Status: "Pago" },
         { ID_Nota: "D46C8BB41E704D538D370CE3A2C81A26", Tipo: "Bônus", Periodo_Servico: "05/11/2026", Data_Emissao: "2026-11-06", Pacotes_Anotados: 0, Pacotes_Nota_Amazon: 1, Valor_Bruto: 50.00, Valor_Liquido: 46.53, Status: "Pago" },
         { ID_Nota: "4A10B659F9664B42901BAF39033745EA", Tipo: "Entregas", Periodo_Servico: "01/11 a 07/11", Data_Emissao: "2026-11-08", Pacotes_Anotados: 232, Pacotes_Nota_Amazon: 258, Valor_Bruto: 595.98, Valor_Liquido: 554.63, Status: "Pago" },
-        { ID_Nota: "CICLO-0811-1411", Tipo: "Entregas", Periodo_Servico: "08/11 a 14/11", Data_Emissao: "2026-11-15", Pacotes_Anotados: 277, Pacotes_Nota_Amazon: 277, Valor_Bruto: 639.87, Valor_Liquido: 595.48, Status: "A Receber" }
+        { ID_Nota: "CICLO-0811-1411", Tipo: "Entregas", Periodo_Servico: "08/11 a 14/11", Data_Emissao: "2026-11-15", Pacotes_Anotados: 242, Pacotes_Nota_Amazon: 242, Valor_Bruto: 559.02, Valor_Liquido: 520.30, Status: "A Receber" }
       ],
       indicacoes: [
         { ID: "IND-1", Nome_Indicado: "Michel", Data_Inicio: "2026-10-15", Data_30_Dias: "2026-11-14", Valor_Total: 250, Parcela_1_Inicio: "Pago", Parcela_2_30Dias: "Pendente" },
@@ -742,26 +1046,72 @@
       ]
     };
 
-    let db = JSON.parse(localStorage.getItem("hubglass_db_v2")) || ESTADO_INICIAL;
-    if (!db.config) db.config = ESTADO_INICIAL.config;
+    const STORAGE_KEY = "lastro_db_v3";
+    let db = JSON.parse(localStorage.getItem(STORAGE_KEY)) || structuredClone(ESTADO_INICIAL);
+    if (!db.config) db.config = structuredClone(ESTADO_INICIAL.config);
     if (!db.config.scriptUrl) db.config.scriptUrl = DEFAULT_SCRIPT_URL;
+
+    // Garante que cada registro de bônus possua a propriedade numérica Bonus_Pago
+    db.entregas.forEach(d => {
+      if (typeof d.Bonus_Pago === "undefined") {
+        d.Bonus_Pago = d.Bonus_Status === "Pago" ? Number(d.Bonus_Ofertado || 0) : 0;
+      }
+    });
 
     let fotoBase64Atual = "";
     let html5QrCode = null;
 
+    // EFEITO DE REFRAÇÃO DINÂMICA (YBOUANE/LIQUIDGLASS GLARE)
+    document.addEventListener("pointermove", (e) => {
+      document.querySelectorAll(".lg-surface").forEach(card => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+        card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+      });
+    });
+
+    // GERENCIAMENTO DE TEMA (AUTO / ESCURO / CLARO)
+    const mediaDark = window.matchMedia("(prefers-color-scheme: dark)");
+    mediaDark.addEventListener("change", () => {
+      if ((db.config.themePref || "auto") === "auto") aplicarTemaDOM("auto");
+    });
+
+    function definirTema(modo) {
+      db.config.themePref = modo;
+      salvarLocal();
+      aplicarTemaDOM(modo);
+    }
+
+    function aplicarTemaDOM(modo) {
+      const efetivo = modo === "auto" ? (mediaDark.matches ? "dark" : "light") : modo;
+      document.documentElement.setAttribute("data-theme", efetivo);
+      document.getElementById("btnThemeAuto").classList.toggle("active", modo === "auto");
+      document.getElementById("btnThemeDark").classList.toggle("active", modo === "dark");
+      document.getElementById("btnThemeLight").classList.toggle("active", modo === "light");
+    }
+
     function salvarLocal() {
-      localStorage.setItem("hubglass_db_v2", JSON.stringify(db));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+    }
+
+    function restaurarPadraoLimpo() {
+      if (!confirm("Recarregar a base padrão (13/11 zerado, TBRs zerados e bônus de R$ 120 pendente)?")) return;
+      db = structuredClone(ESTADO_INICIAL);
+      salvarLocal();
+      carregarDiaSelecionado();
+      atualizarTelas();
     }
 
     function formatBRL(v) {
       return Number(v || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
     }
 
-    function mudarAba(aba, btn) {
-      document.querySelectorAll(".tab-view").forEach(el => el.classList.remove("active"));
-      document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
+    function mudarAba(aba) {
+      document.querySelectorAll(".view-section").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".nav-item").forEach(el => {
+        el.classList.toggle("active", el.getAttribute("data-target") === aba);
+      });
       document.getElementById("tab-" + aba).classList.add("active");
-      btn.classList.add("active");
       atualizarTelas();
     }
 
@@ -804,6 +1154,8 @@
       const tarifaBruta = parseFloat(db.config.tarifaBruta) || 2.31;
       const tarifaLiq = parseFloat(db.config.tarifaLiquida) || 2.15;
 
+      document.getElementById("tagTarifaAtiva").textContent = `${formatBRL(tarifaBruta)}/un`;
+
       const entregues = parseInt(document.getElementById("inputEntregues").value, 10) || 0;
       const tentarNov = parseInt(document.getElementById("inputTentarNovamente").value, 10) || 0;
       const resgateQtd = parseInt(document.getElementById("inputResgateQtd").value, 10) || 0;
@@ -819,9 +1171,8 @@
       const ganhoLiq = ((entregues + resgateQtd) * tarifaLiq);
 
       document.getElementById("kpiGanhoHojeBruto").textContent = formatBRL(ganhoBruto);
-      document.getElementById("kpiGanhoHojeLiq").textContent = `Líquido: ${formatBRL(ganhoLiq)}`;
+      document.getElementById("kpiGanhoHojeLiq").textContent = `Líquido estimado: ${formatBRL(ganhoLiq)}`;
 
-      // Cálculo da Meta 98%
       const totalBag = entregues + resgateQtd + tentarNov + tbrsDia;
       const pctMeta = totalBag > 0 ? ((entregues + resgateQtd) / totalBag) * 100 : 100;
       const metaEl = document.getElementById("metaPctText");
@@ -829,7 +1180,9 @@
 
       metaEl.textContent = `${pctMeta.toFixed(1)}%`;
       barEl.style.width = `${Math.min(100, pctMeta)}%`;
-      metaEl.style.color = pctMeta >= 98 ? "var(--accent-green)" : "var(--accent-amber)";
+      const cor = pctMeta >= 98 ? "var(--status-positive)" : "var(--status-warning)";
+      metaEl.style.color = cor;
+      barEl.style.backgroundColor = cor;
     }
 
     async function salvarLancamentoDia() {
@@ -849,6 +1202,9 @@
       const foraRota = tbrsDia.filter(t => t.Motivo === "Fora de Rota").length;
       const danificados = tbrsDia.filter(t => t.Motivo === "Danificado").length;
 
+      const existente = db.entregas.find(d => d.Data === dataSel);
+      const bonusJaPago = existente ? (Number(existente.Bonus_Pago) || 0) : 0;
+
       const novoItem = {
         Data: dataSel,
         Semana_Ciclo: "08/11 a 14/11",
@@ -860,7 +1216,8 @@
         Resgate_Origem: resgateOrigem,
         Resgate_Valor_Bruto: resgateVal,
         Bonus_Ofertado: bonusDia,
-        Bonus_Status: bonusDia > 0 ? "A Receber" : "-",
+        Bonus_Pago: bonusJaPago,
+        Bonus_Status: bonusDia === 0 ? "-" : (bonusJaPago >= bonusDia ? "Pago" : "A Receber"),
         Valor_Bruto_Dia: Number(((entregues * tarifaBruta) + resgateVal).toFixed(2)),
         Valor_Liquido_Dia: Number(((entregues + resgateQtd) * tarifaLiq).toFixed(2)),
         Folga: folga
@@ -870,13 +1227,43 @@
       if (idx >= 0) db.entregas[idx] = novoItem;
       else db.entregas.push(novoItem);
 
+      // Atualiza o resumo da nota do ciclo atual (08/11 a 14/11)
+      atualizarNotaCicloAtual();
       salvarLocal();
       atualizarTelas();
       await enviarPostPlanilha({ action: "salvarDia", item: novoItem });
-      alert("Fechamento do dia salvo com sucesso!");
     }
 
-    // MODAL E SCANNER TBR (ACEITA TBR + 9 A 11 DÍGITOS)
+    function atualizarNotaCicloAtual() {
+      const entregasCiclo = db.entregas.filter(d => d.Semana_Ciclo === "08/11 a 14/11");
+      const totalPct = entregasCiclo.reduce((a, d) => a + Number(d.Entregues_Normal || 0) + Number(d.Resgate_Qtd || 0), 0);
+      const totalBruto = entregasCiclo.reduce((a, d) => a + Number(d.Valor_Bruto_Dia || 0), 0);
+      const totalLiq = entregasCiclo.reduce((a, d) => a + Number(d.Valor_Liquido_Dia || 0), 0);
+
+      const notaCiclo = db.notas.find(n => n.ID_Nota === "CICLO-0811-1411");
+      if (notaCiclo) {
+        notaCiclo.Pacotes_Anotados = totalPct;
+        notaCiclo.Pacotes_Nota_Amazon = totalPct;
+        notaCiclo.Valor_Bruto = Number(totalBruto.toFixed(2));
+        notaCiclo.Valor_Liquido = Number(totalLiq.toFixed(2));
+      }
+    }
+
+    // AUDITORIA PARCIAL DE BÔNUS
+    async function atualizarValorBonusPago(dataDia, valorDigitado) {
+      const reg = db.entregas.find(d => d.Data === dataDia);
+      if (!reg) return;
+      const ofertado = Number(reg.Bonus_Ofertado || 0);
+      const pago = Math.min(ofertado, Math.max(0, parseFloat(valorDigitado) || 0));
+      reg.Bonus_Pago = pago;
+      reg.Bonus_Status = pago >= ofertado ? "Pago" : (pago > 0 ? "Parcial" : "A Receber");
+
+      salvarLocal();
+      atualizarTelas();
+      await enviarPostPlanilha({ action: "salvarDia", item: reg });
+    }
+
+    // GESTÃO DE TBRs
     function abrirModalTBR() {
       document.getElementById("modalTBR").classList.add("open");
       document.getElementById("inputCodigoTBR").value = "TBR";
@@ -903,7 +1290,7 @@
           html5QrCode.stop().catch(() => {});
         },
         () => {}
-      ).catch(() => alert("Permita o acesso à câmera para ler o código de barras."));
+      ).catch(() => alert("Verifique a permissão de câmera do navegador."));
     }
 
     function capturarFotoPacote(event) {
@@ -921,9 +1308,8 @@
 
     async function confirmarRegistroTBR() {
       const codigo = document.getElementById("inputCodigoTBR").value.trim().toUpperCase();
-      const regexTBR = /^TBR\d{9,11}$/;
-      if (!regexTBR.test(codigo)) {
-        if (!confirm(`O código "${codigo}" não está no formato padrão (TBR + 9 a 11 dígitos). Deseja salvar mesmo assim?`)) return;
+      if (!/^TBR\d{9,11}$/.test(codigo)) {
+        if (!confirm(`O código "${codigo}" difere do padrão TBR + 9 a 11 dígitos. Registrar mesmo assim?`)) return;
       }
 
       const dataReceb = document.getElementById("inputDataDia").value;
@@ -967,7 +1353,7 @@
       const motorista = document.getElementById("inputMotoristaNome").value.trim();
       const dataDev = document.getElementById("inputDataBaixa").value;
 
-      if (!motorista) return alert("Informe o nome do motorista que recolheu o pacote!");
+      if (!motorista) return alert("Informe o motorista responsável pelo recolhimento.");
 
       const item = db.devolucoes.find(t => t.ID === id);
       if (item) {
@@ -991,28 +1377,44 @@
         String(t.Data_Recebimento || "").includes(termo)
       );
 
-      cont.innerHTML = filtrados.map(t => `
-        <div class="item-card">
+      const htmlLista = filtrados.map(t => `
+        <div class="data-row">
           <div>
-            <div style="font-weight:800; font-size:0.95rem; color:var(--accent-cyan)">${t.TBR}</div>
-            <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">
-              📥 Recebido (Descontado): <b>${t.Data_Recebimento}</b> | ${t.Motivo}
+            <div style="font-family:var(--font-mono); font-weight:700; font-size:0.92rem;">${t.TBR}</div>
+            <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:3px;">
+              Entrada descontada em <b>${String(t.Data_Recebimento).split("-").reverse().join("/")}</b> · ${t.Motivo}
             </div>
             ${t.Status_Devolucao === "Devolvido"
-              ? `<div style="font-size:0.75rem; color:var(--accent-green); margin-top:3px;">✅ Devolvido em <b>${t.Data_Devolucao}</b> p/ Motorista: <b>${t.Motorista_Recebedor}</b></div>`
-              : `<div style="font-size:0.75rem; color:var(--accent-amber); margin-top:3px;">⏳ Aguardando coleta do motorista</div>`
+              ? `<div style="font-size:0.74rem; color:var(--status-positive); margin-top:3px;">Devolvido em ${String(t.Data_Devolucao).split("-").reverse().join("/")} · Motorista: <b>${t.Motorista_Recebedor}</b></div>`
+              : `<div style="font-size:0.74rem; color:var(--status-warning); margin-top:3px;">Em custódia local — aguardando baixa com motorista</div>`
             }
-            ${t.Observacoes ? `<div style="font-size:0.72rem; opacity:0.75; margin-top:2px;">Obs: ${t.Observacoes}</div>` : ""}
+            ${t.Observacoes ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Ref: ${t.Observacoes}</div>` : ""}
           </div>
           <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end;">
-            <span class="badge ${t.Status_Devolucao === 'Devolvido' ? 'badge-green' : 'badge-amber'}">${t.Status_Devolucao}</span>
+            <span class="status-pill ${t.Status_Devolucao === 'Devolvido' ? 'pill-positive' : 'pill-warning'}">${t.Status_Devolucao}</span>
             ${t.Status_Devolucao !== "Devolvido"
-              ? `<button class="btn-secondary" onclick="abrirModalBaixa('${t.ID}')">🚚 Dar Baixa</button>`
+              ? `<button class="btn-ghost" onclick="abrirModalBaixa('${t.ID}')">Dar Baixa</button>`
               : ""
             }
           </div>
         </div>
-      `).join("") || `<p style="font-size:0.82rem; color:var(--text-secondary);">Nenhum TBR encontrado.</p>`;
+      `).join("");
+
+      cont.innerHTML = htmlLista || `<div style="padding:18px 0; font-size:0.82rem; color:var(--text-secondary); text-align:center;">Nenhum pacote pendente ou registrado na custódia de devolução.</div>`;
+
+      // Atualiza também o card lateral da aba Operação
+      const pendentes = db.devolucoes.filter(t => t.Status_Devolucao !== "Devolvido");
+      document.getElementById("resumoTbrHojeContainer").innerHTML = pendentes.length
+        ? pendentes.map(t => `
+            <div class="data-row">
+              <div>
+                <div style="font-family:var(--font-mono); font-weight:700; font-size:0.86rem;">${t.TBR}</div>
+                <div style="font-size:0.72rem; color:var(--text-secondary);">${t.Motivo} · Entrada ${String(t.Data_Recebimento).split("-").reverse().join("/")}</div>
+              </div>
+              <button class="btn-ghost" onclick="abrirModalBaixa('${t.ID}')">Baixar</button>
+            </div>
+          `).join("")
+        : `<div style="font-size:0.78rem; color:var(--text-secondary);">Zero pacotes pendentes de devolução no momento.</div>`;
     }
 
     async function alternarStatusNota(idNota) {
@@ -1037,7 +1439,7 @@
     async function adicionarIndicacaoPrompt() {
       const nome = prompt("Nome do parceiro indicado:");
       if (!nome) return;
-      const dataIni = prompt("Data de início das entregas (AAAA-MM-DD):", "2026-11-13");
+      const dataIni = prompt("Data de início da operação (AAAA-MM-DD):", "2026-11-13");
       if (!dataIni) return;
 
       const dt30 = new Date(dataIni + "T12:00:00");
@@ -1060,6 +1462,7 @@
     }
 
     function atualizarTelas() {
+      atualizarNotaCicloAtual();
       renderizarListaTBR();
 
       // Semana Atual (08/11 a 14/11)
@@ -1069,41 +1472,85 @@
       const bonusSemana = entregasSemana.reduce((acc, d) => acc + (Number(d.Bonus_Ofertado) || 0), 0);
 
       document.getElementById("kpiSemanaBruto").textContent = formatBRL(brutoSemana);
-      document.getElementById("kpiSemanaPct").textContent = `${pctSemana} pcts + ${formatBRL(bonusSemana)} bônus`;
+      document.getElementById("kpiSemanaPct").textContent = `${pctSemana} pacotes entregues + ${formatBRL(bonusSemana)} bônus`;
 
-      // Financeiro e Bônus Pendentes
-      const bonusPendentes = db.entregas.filter(d => Number(d.Bonus_Ofertado) > 0 && d.Bonus_Status !== "Pago");
-      const somaBonusPend = bonusPendentes.reduce((acc, d) => acc + Number(d.Bonus_Ofertado), 0);
-
-      document.getElementById("listaBonusPendentes").innerHTML = bonusPendentes.map(b => `
-        <div class="item-card">
+      // Últimos lançamentos na tela principal
+      document.getElementById("resumoUltimosDiasContainer").innerHTML = entregasSemana.slice(-4).reverse().map(d => `
+        <div class="data-row">
           <div>
-            <div style="font-weight:700;">Bônus do dia ${String(b.Data).split("-").reverse().join("/")}</div>
-            <div style="font-size:0.75rem; color:var(--text-secondary);">Aguardando liberação na nota de terça-feira</div>
+            <div style="font-family:var(--font-mono); font-weight:600; font-size:0.84rem;">${String(d.Data).split("-").reverse().join("/")}</div>
+            <div style="font-size:0.74rem; color:var(--text-secondary);">
+              ${d.Entregues_Normal} rota ${d.Resgate_Qtd ? `+ ${d.Resgate_Qtd} resgate (${d.Resgate_Origem || 'HUB'})` : ""}
+            </div>
           </div>
-          <span class="badge badge-amber">${formatBRL(b.Bonus_Ofertado)} (A Receber)</span>
+          <div style="font-family:var(--font-mono); font-weight:700; font-size:0.88rem; color:var(--status-positive);">
+            ${formatBRL(d.Valor_Bruto_Dia)}
+          </div>
         </div>
-      `).join("") || `<p style="font-size:0.8rem; color:var(--text-secondary);">Nenhum bônus pendente.</p>`;
+      `).join("");
+
+      // Auditoria de Bônus (Com controle de pagamento parcial, ex: 100 pago de 120)
+      const diasComBonus = db.entregas.filter(d => Number(d.Bonus_Ofertado) > 0);
+      let somaRestanteBonus = 0;
+
+      const bonusPendentesOuParciais = diasComBonus.filter(d => {
+        const ofertado = Number(d.Bonus_Ofertado || 0);
+        const pago = Number(d.Bonus_Pago || 0);
+        const restante = Math.max(0, ofertado - pago);
+        somaRestanteBonus += restante;
+        return restante > 0 || d.Data === "2026-10-24" || d.Data === "2026-11-12";
+      });
+
+      document.getElementById("finBonusPendente").textContent = formatBRL(somaRestanteBonus);
+
+      document.getElementById("listaBonusPendentes").innerHTML = bonusPendentesOuParciais.map(b => {
+        const ofertado = Number(b.Bonus_Ofertado || 0);
+        const pago = Number(b.Bonus_Pago || 0);
+        const falta = Math.max(0, ofertado - pago);
+        return `
+          <div class="data-row" style="flex-direction:column; align-items:stretch; gap:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <div style="font-weight:600; font-size:0.86rem;">
+                  Bônus ${String(b.Data).split("-").reverse().join("/")}
+                  ${b.Resgate_Origem ? `<span style="color:var(--text-secondary); font-weight:400;">· ${b.Resgate_Origem}</span>` : ""}
+                </div>
+                <div style="font-size:0.74rem; color:var(--text-secondary); margin-top:2px;">
+                  Ofertado: <b style="font-family:var(--font-mono)">${formatBRL(ofertado)}</b> ·
+                  Pago: <b style="font-family:var(--font-mono); color:var(--status-positive)">${formatBRL(pago)}</b>
+                </div>
+              </div>
+              <span class="status-pill ${falta === 0 ? 'pill-positive' : 'pill-warning'}">
+                ${falta === 0 ? 'Quitado' : `Falta ${formatBRL(falta)}`}
+              </span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding-top:8px; border-top:1px solid var(--divider);">
+              <span style="font-size:0.74rem; color:var(--text-secondary);">Valor efetivamente pago (R$):</span>
+              <input type="number" step="0.01" class="input-field input-mono" style="width:110px; text-align:right;" value="${pago}" onchange="atualizarValorBonusPago('${b.Data}', this.value)" />
+            </div>
+          </div>
+        `;
+      }).join("") || `<div style="font-size:0.8rem; color:var(--text-secondary);">Todos os bônus estão integralmente quitados.</div>`;
 
       // Notas Semanais
       const somaNotasPagas = db.notas.filter(n => n.Status === "Pago").reduce((a, n) => a + Number(n.Valor_Bruto), 0);
       const somaNotasAReceber = db.notas.filter(n => n.Status !== "Pago").reduce((a, n) => a + Number(n.Valor_Bruto), 0);
 
       document.getElementById("finTotalPago").textContent = formatBRL(somaNotasPagas);
-      document.getElementById("finTotalAReceber").textContent = formatBRL(somaNotasAReceber + somaBonusPend);
+      document.getElementById("finTotalAReceber").textContent = formatBRL(somaNotasAReceber + somaRestanteBonus);
 
       document.getElementById("listaNotasSemanais").innerHTML = db.notas.slice().reverse().map(n => `
-        <div class="item-card">
+        <div class="data-row">
           <div>
-            <div style="font-weight:700; font-size:0.9rem;">${n.Tipo}: ${n.Periodo_Servico}</div>
-            <div style="font-size:0.74rem; color:var(--text-secondary);">
-              Bruto: <b>${formatBRL(n.Valor_Bruto)}</b> | Líq: ${formatBRL(n.Valor_Liquido)}
-              ${n.Tipo === 'Entregas' ? ` | Anotado: ${n.Pacotes_Anotados} vs NF: <b>${n.Pacotes_Nota_Amazon} pcts</b>` : ''}
+            <div style="font-weight:600; font-size:0.86rem;">${n.Tipo} · ${n.Periodo_Servico}</div>
+            <div style="font-size:0.74rem; color:var(--text-secondary); margin-top:2px; font-variant-numeric:tabular-nums;">
+              Bruto: <b>${formatBRL(n.Valor_Bruto)}</b> · Líq: ${formatBRL(n.Valor_Liquido)}
+              ${n.Tipo === 'Entregas' ? ` · NF: ${n.Pacotes_Nota_Amazon} un` : ''}
             </div>
-            <div style="font-size:0.68rem; opacity:0.65; margin-top:2px;">NF: ${String(n.ID_Nota).slice(0, 14)}...</div>
+            <div style="font-family:var(--font-mono); font-size:0.68rem; color:var(--text-muted); margin-top:2px;">ID: ${String(n.ID_Nota).slice(0, 16)}</div>
           </div>
-          <button class="badge ${n.Status === 'Pago' ? 'badge-green' : 'badge-amber'}" style="cursor:pointer" onclick="alternarStatusNota('${n.ID_Nota}')">
-            ${n.Status} ↻
+          <button class="status-pill ${n.Status === 'Pago' ? 'pill-positive' : 'pill-warning'}" style="border:none; cursor:pointer;" onclick="alternarStatusNota('${n.ID_Nota}')">
+            ${n.Status}
           </button>
         </div>
       `).join("");
@@ -1112,24 +1559,26 @@
       document.getElementById("listaIndicacoesContainer").innerHTML = db.indicacoes.map(ind => {
         const faltam = (ind.Parcela_1_Inicio === "Pago" ? 0 : 1) + (ind.Parcela_2_30Dias === "Pago" ? 0 : 1);
         return `
-          <div class="item-card" style="flex-direction:column; align-items:stretch;">
+          <div class="data-row" style="flex-direction:column; align-items:stretch;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <div>
-                <div style="font-weight:800; font-size:0.98rem;">👤 ${ind.Nome_Indicado}</div>
-                <div style="font-size:0.74rem; color:var(--text-secondary);">
-                  Início: ${String(ind.Data_Inicio).split("-").reverse().join("/")} | Completa 30 dias: <b>${String(ind.Data_30_Dias).split("-").reverse().join("/")}</b>
+                <div style="font-weight:700; font-size:0.92rem;">${ind.Nome_Indicado}</div>
+                <div style="font-size:0.74rem; color:var(--text-secondary); margin-top:2px;">
+                  Início: ${String(ind.Data_Inicio).split("-").reverse().join("/")} · 30 dias: <b>${String(ind.Data_30_Dias).split("-").reverse().join("/")}</b>
                 </div>
               </div>
-              <span class="badge ${faltam === 0 ? 'badge-green' : 'badge-amber'}">
-                ${faltam === 0 ? 'Quitado (2/2)' : `Falta(m) ${faltam} parcela(s)`}
+              <span class="status-pill ${faltam === 0 ? 'pill-positive' : 'pill-warning'}">
+                ${faltam === 0 ? '2/2 Pagas' : `Falta ${faltam} parc.`}
               </span>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px;">
-              <button class="btn-secondary" onclick="alternarParcelaIndicacao('${ind.ID}', 1)">
-                1ª Nota (Início R$ 125): <b style="color:${ind.Parcela_1_Inicio === 'Pago' ? '#6ee7b7' : '#fde68a'}">${ind.Parcela_1_Inicio}</b>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px;">
+              <button class="btn-ghost" style="justify-content:space-between;" onclick="alternarParcelaIndicacao('${ind.ID}', 1)">
+                <span>1ª Parc. (Ativação)</span>
+                <b style="font-family:var(--font-mono); color:${ind.Parcela_1_Inicio === 'Pago' ? 'var(--status-positive)' : 'var(--status-warning)'}">${ind.Parcela_1_Inicio}</b>
               </button>
-              <button class="btn-secondary" onclick="alternarParcelaIndicacao('${ind.ID}', 2)">
-                2ª Nota (30d R$ 125): <b style="color:${ind.Parcela_2_30Dias === 'Pago' ? '#6ee7b7' : '#fde68a'}">${ind.Parcela_2_30Dias}</b>
+              <button class="btn-ghost" style="justify-content:space-between;" onclick="alternarParcelaIndicacao('${ind.ID}', 2)">
+                <span>2ª Parc. (30 Dias)</span>
+                <b style="font-family:var(--font-mono); color:${ind.Parcela_2_30Dias === 'Pago' ? 'var(--status-positive)' : 'var(--status-warning)'}">${ind.Parcela_2_30Dias}</b>
               </button>
             </div>
           </div>
@@ -1138,15 +1587,18 @@
 
       // Histórico Diário
       document.getElementById("listaHistoricoDiario").innerHTML = db.entregas.slice().reverse().map(d => `
-        <div class="item-card">
+        <div class="data-row">
           <div>
-            <div style="font-weight:700;">${String(d.Data).split("-").reverse().join("/")} <span style="font-size:0.72rem; opacity:0.7">(${d.Semana_Ciclo})</span></div>
-            <div style="font-size:0.75rem; color:var(--text-secondary);">
-              ${d.Folga ? "🌴 Folga" : `${d.Entregues_Normal} rota ${d.Resgate_Qtd ? `+ ${d.Resgate_Qtd} resgate` : ""} ${d.Bonus_Ofertado ? `+ Bônus R$ ${d.Bonus_Ofertado}` : ""}`}
+            <div style="font-family:var(--font-mono); font-weight:600; font-size:0.84rem;">
+              ${String(d.Data).split("-").reverse().join("/")}
+              <span style="font-family:var(--font-sans); font-size:0.72rem; color:var(--text-muted); font-weight:400;">(${d.Semana_Ciclo})</span>
+            </div>
+            <div style="font-size:0.74rem; color:var(--text-secondary); margin-top:2px;">
+              ${d.Folga ? "Folga Programada" : `${d.Entregues_Normal} rota ${d.Resgate_Qtd ? `+ ${d.Resgate_Qtd} resgate (${d.Resgate_Origem || 'HUB'})` : ""} ${d.Bonus_Ofertado ? `· Bônus R$ ${d.Bonus_Ofertado}` : ""}`}
             </div>
           </div>
-          <div style="text-align:right;">
-            <div style="font-weight:700; color:var(--accent-green)">${formatBRL(d.Valor_Bruto_Dia)}</div>
+          <div style="text-align:right; font-family:var(--font-mono);">
+            <div style="font-weight:700; font-size:0.88rem; color:var(--status-positive)">${formatBRL(d.Valor_Bruto_Dia)}</div>
             <div style="font-size:0.7rem; color:var(--text-secondary)">Líq: ${formatBRL(d.Valor_Liquido_Dia)}</div>
           </div>
         </div>
@@ -1165,48 +1617,53 @@
     async function enviarPostPlanilha(payload) {
       const url = db.config.scriptUrl || DEFAULT_SCRIPT_URL;
       try {
-        document.getElementById("syncStatusText").textContent = "Salvando na planilha...";
+        document.getElementById("syncStatusText").textContent = "Sincronizando alteração com a planilha...";
         await fetch(url, {
           method: "POST",
           mode: "no-cors",
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(payload)
         });
-        document.getElementById("syncStatusText").textContent = "Sincronizado c/ Google Sheets ✓";
+        document.getElementById("syncStatusText").textContent = "Sincronizado com Google Sheets";
       } catch (e) {
-        document.getElementById("syncStatusText").textContent = "Salvo localmente (Sem rede)";
+        document.getElementById("syncStatusText").textContent = "Operando em cache local";
       }
     }
 
     async function sincronizarPlanilha(silencioso = false) {
       const url = db.config.scriptUrl || DEFAULT_SCRIPT_URL;
       try {
-        document.getElementById("syncStatusText").textContent = "Sincronizando c/ Sheets...";
+        document.getElementById("syncStatusText").textContent = "Consultando Google Sheets...";
         const res = await fetch(url);
         const json = await res.json();
         if (json.status === "ok" && json.data) {
-          if (json.data.entregas?.length) db.entregas = json.data.entregas;
-          if (json.data.devolucoes?.length) db.devolucoes = json.data.devolucoes;
+          // Filtra o dia 13/11 caso ainda esteja antigo na planilha sem lançamento novo
+          if (json.data.entregas?.length) {
+            db.entregas = json.data.entregas.map(d => ({
+              ...d,
+              Bonus_Pago: typeof d.Bonus_Pago !== "undefined"
+                ? Number(d.Bonus_Pago)
+                : (d.Data === "2026-10-24" ? 0 : (d.Data === "2026-10-27" ? 30 : (d.Bonus_Status === "Pago" ? Number(d.Bonus_Ofertado || 0) : 0)))
+            }));
+          }
           if (json.data.notas?.length) db.notas = json.data.notas;
           if (json.data.indicacoes?.length) db.indicacoes = json.data.indicacoes;
           salvarLocal();
           carregarDiaSelecionado();
           atualizarTelas();
-          document.getElementById("syncStatusText").textContent = "Sincronizado c/ Google Sheets ✓";
+          document.getElementById("syncStatusText").textContent = "Sincronizado com Google Sheets";
         }
       } catch (e) {
-        document.getElementById("syncStatusText").textContent = "Modo Offline (Dados Locais)";
-        if (!silencioso) {
-          alert("Não foi possível puxar da planilha agora. Verifique se você já rodou a função 'setupInicial' no Apps Script e se a permissão está como 'Qualquer pessoa'.");
-        }
+        document.getElementById("syncStatusText").textContent = "Logística, Auditoria, Saldo, TBRs e Recebíveis";
+        if (!silencioso) alert("Não foi possível conectar à planilha no momento.");
       }
     }
 
     window.addEventListener("DOMContentLoaded", () => {
       document.getElementById("inputScriptUrl").value = db.config.scriptUrl || DEFAULT_SCRIPT_URL;
+      aplicarTemaDOM(db.config.themePref || "auto");
       carregarDiaSelecionado();
       atualizarTelas();
-      sincronizarPlanilha(true);
     });
   </script>
 </body>
