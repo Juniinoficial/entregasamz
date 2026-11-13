@@ -384,10 +384,10 @@
         <span>📦</span>
         <div>
           <div>Amazon Hub Glass</div>
-          <div style="font-size:0.7rem; font-weight:400; color:var(--text-secondary)" id="syncStatusText">Dados Locais + Histórico Out/Nov</div>
+          <div style="font-size:0.7rem; font-weight:400; color:var(--text-secondary)" id="syncStatusText">Conectado ao Google Sheets ✓</div>
         </div>
       </div>
-      <button class="sync-btn liquid-pill" onclick="sincronizarPlanilha()">🔄 Sincronizar</button>
+      <button class="sync-btn liquid-pill" onclick="sincronizarPlanilha(false)">🔄 Sincronizar</button>
     </header>
 
     <!-- ABA 1: HOJE / LANÇAMENTO -->
@@ -569,7 +569,7 @@
         <div class="section-title"><span>⚙️ Conexão Google Sheets & Tarifas</span></div>
         <div style="margin-bottom:12px;">
           <label style="font-size:0.78rem; color:var(--text-secondary);">URL do Web App (Google Apps Script)</label>
-          <input type="text" id="inputScriptUrl" class="input-glass" style="width:100%; margin-top:6px;" placeholder="https://script.google.com/macros/s/.../exec" onchange="salvarConfigLocal()" />
+          <input type="text" id="inputScriptUrl" class="input-glass" style="width:100%; margin-top:6px;" value="https://script.google.com/macros/s/AKfycbySoITRQ5YHnR0MPjfZiJ4pqFJIrKwoPCPkxuIbVbr6cYSQrgD0M4vTYKDDjfTELW9V/exec" onchange="salvarConfigLocal()" />
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
           <div>
@@ -672,9 +672,16 @@
   </nav>
 
   <script>
-    // BASE DE DADOS PRÉ-CARREGADA (FIEL AOS SEUS ANEXOS E DECLARAÇÕES DE LUCRO)
+    const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbySoITRQ5YHnR0MPjfZiJ4pqFJIrKwoPCPkxuIbVbr6cYSQrgD0M4vTYKDDjfTELW9V/exec";
+
+    // BASE DE DADOS PRÉ-CARREGADA
     const ESTADO_INICIAL = {
-      config: { tarifaBruta: 2.31, tarifaLiquida: 2.15, modalidade: "Milk Run", scriptUrl: "" },
+      config: {
+        tarifaBruta: 2.31,
+        tarifaLiquida: 2.15,
+        modalidade: "Milk Run",
+        scriptUrl: DEFAULT_SCRIPT_URL
+      },
       entregas: [
         { Data: "2026-10-07", Semana_Ciclo: "04/10 a 10/10", Entregues_Normal: 2, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 80, Bonus_Status: "Pago", Valor_Bruto_Dia: 4.62, Valor_Liquido_Dia: 4.30, Folga: false },
         { Data: "2026-10-08", Semana_Ciclo: "04/10 a 10/10", Entregues_Normal: 2, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 40, Bonus_Status: "Pago", Valor_Bruto_Dia: 4.62, Valor_Liquido_Dia: 4.30, Folga: false },
@@ -735,12 +742,15 @@
       ]
     };
 
-    let db = JSON.parse(localStorage.getItem("hubglass_db_v1")) || ESTADO_INICIAL;
+    let db = JSON.parse(localStorage.getItem("hubglass_db_v2")) || ESTADO_INICIAL;
+    if (!db.config) db.config = ESTADO_INICIAL.config;
+    if (!db.config.scriptUrl) db.config.scriptUrl = DEFAULT_SCRIPT_URL;
+
     let fotoBase64Atual = "";
     let html5QrCode = null;
 
     function salvarLocal() {
-      localStorage.setItem("hubglass_db_v1", JSON.stringify(db));
+      localStorage.setItem("hubglass_db_v2", JSON.stringify(db));
     }
 
     function formatBRL(v) {
@@ -811,7 +821,7 @@
       document.getElementById("kpiGanhoHojeBruto").textContent = formatBRL(ganhoBruto);
       document.getElementById("kpiGanhoHojeLiq").textContent = `Líquido: ${formatBRL(ganhoLiq)}`;
 
-      // Cálculo da Meta 98% (Fora de Rota, Danificados e Insucessos penalizam a meta do dia)
+      // Cálculo da Meta 98%
       const totalBag = entregues + resgateQtd + tentarNov + tbrsDia;
       const pctMeta = totalBag > 0 ? ((entregues + resgateQtd) / totalBag) * 100 : 100;
       const metaEl = document.getElementById("metaPctText");
@@ -976,9 +986,9 @@
       const termo = (document.getElementById("inputBuscaTBR").value || "").toLowerCase();
       const cont = document.getElementById("listaTBRContainer");
       const filtrados = db.devolucoes.filter(t =>
-        t.TBR.toLowerCase().includes(termo) ||
-        (t.Motorista_Recebedor || "").toLowerCase().includes(termo) ||
-        (t.Data_Recebimento || "").includes(termo)
+        String(t.TBR).toLowerCase().includes(termo) ||
+        String(t.Motorista_Recebedor || "").toLowerCase().includes(termo) ||
+        String(t.Data_Recebimento || "").includes(termo)
       );
 
       cont.innerHTML = filtrados.map(t => `
@@ -1068,7 +1078,7 @@
       document.getElementById("listaBonusPendentes").innerHTML = bonusPendentes.map(b => `
         <div class="item-card">
           <div>
-            <div style="font-weight:700;">Bônus do dia ${b.Data.split("-").reverse().join("/")}</div>
+            <div style="font-weight:700;">Bônus do dia ${String(b.Data).split("-").reverse().join("/")}</div>
             <div style="font-size:0.75rem; color:var(--text-secondary);">Aguardando liberação na nota de terça-feira</div>
           </div>
           <span class="badge badge-amber">${formatBRL(b.Bonus_Ofertado)} (A Receber)</span>
@@ -1090,7 +1100,7 @@
               Bruto: <b>${formatBRL(n.Valor_Bruto)}</b> | Líq: ${formatBRL(n.Valor_Liquido)}
               ${n.Tipo === 'Entregas' ? ` | Anotado: ${n.Pacotes_Anotados} vs NF: <b>${n.Pacotes_Nota_Amazon} pcts</b>` : ''}
             </div>
-            <div style="font-size:0.68rem; opacity:0.65; margin-top:2px;">NF: ${n.ID_Nota.slice(0, 14)}...</div>
+            <div style="font-size:0.68rem; opacity:0.65; margin-top:2px;">NF: ${String(n.ID_Nota).slice(0, 14)}...</div>
           </div>
           <button class="badge ${n.Status === 'Pago' ? 'badge-green' : 'badge-amber'}" style="cursor:pointer" onclick="alternarStatusNota('${n.ID_Nota}')">
             ${n.Status} ↻
@@ -1107,7 +1117,7 @@
               <div>
                 <div style="font-weight:800; font-size:0.98rem;">👤 ${ind.Nome_Indicado}</div>
                 <div style="font-size:0.74rem; color:var(--text-secondary);">
-                  Início: ${ind.Data_Inicio.split("-").reverse().join("/")} | Completa 30 dias: <b>${ind.Data_30_Dias.split("-").reverse().join("/")}</b>
+                  Início: ${String(ind.Data_Inicio).split("-").reverse().join("/")} | Completa 30 dias: <b>${String(ind.Data_30_Dias).split("-").reverse().join("/")}</b>
                 </div>
               </div>
               <span class="badge ${faltam === 0 ? 'badge-green' : 'badge-amber'}">
@@ -1130,7 +1140,7 @@
       document.getElementById("listaHistoricoDiario").innerHTML = db.entregas.slice().reverse().map(d => `
         <div class="item-card">
           <div>
-            <div style="font-weight:700;">${d.Data.split("-").reverse().join("/")} <span style="font-size:0.72rem; opacity:0.7">(${d.Semana_Ciclo})</span></div>
+            <div style="font-weight:700;">${String(d.Data).split("-").reverse().join("/")} <span style="font-size:0.72rem; opacity:0.7">(${d.Semana_Ciclo})</span></div>
             <div style="font-size:0.75rem; color:var(--text-secondary);">
               ${d.Folga ? "🌴 Folga" : `${d.Entregues_Normal} rota ${d.Resgate_Qtd ? `+ ${d.Resgate_Qtd} resgate` : ""} ${d.Bonus_Ofertado ? `+ Bônus R$ ${d.Bonus_Ofertado}` : ""}`}
             </div>
@@ -1144,7 +1154,7 @@
     }
 
     function salvarConfigLocal() {
-      db.config.scriptUrl = document.getElementById("inputScriptUrl").value.trim();
+      db.config.scriptUrl = document.getElementById("inputScriptUrl").value.trim() || DEFAULT_SCRIPT_URL;
       db.config.tarifaBruta = parseFloat(document.getElementById("cfgBruto").value) || 2.31;
       db.config.tarifaLiquida = parseFloat(document.getElementById("cfgLiquido").value) || 2.15;
       db.config.modalidade = document.getElementById("cfgModalidade").value;
@@ -1153,10 +1163,10 @@
     }
 
     async function enviarPostPlanilha(payload) {
-      if (!db.config.scriptUrl) return;
+      const url = db.config.scriptUrl || DEFAULT_SCRIPT_URL;
       try {
         document.getElementById("syncStatusText").textContent = "Salvando na planilha...";
-        await fetch(db.config.scriptUrl, {
+        await fetch(url, {
           method: "POST",
           mode: "no-cors",
           headers: { "Content-Type": "text/plain;charset=utf-8" },
@@ -1168,14 +1178,11 @@
       }
     }
 
-    async function sincronizarPlanilha() {
-      if (!db.config.scriptUrl) {
-        alert("Cole a URL do seu Google Apps Script na aba Histórico/Config para sincronizar com a nuvem!");
-        return;
-      }
+    async function sincronizarPlanilha(silencioso = false) {
+      const url = db.config.scriptUrl || DEFAULT_SCRIPT_URL;
       try {
-        document.getElementById("syncStatusText").textContent = "Puxando dados da planilha...";
-        const res = await fetch(db.config.scriptUrl);
+        document.getElementById("syncStatusText").textContent = "Sincronizando c/ Sheets...";
+        const res = await fetch(url);
         const json = await res.json();
         if (json.status === "ok" && json.data) {
           if (json.data.entregas?.length) db.entregas = json.data.entregas;
@@ -1188,14 +1195,18 @@
           document.getElementById("syncStatusText").textContent = "Sincronizado c/ Google Sheets ✓";
         }
       } catch (e) {
-        alert("Erro ao puxar da planilha. Verifique se a implantação do Apps Script está como 'Qualquer pessoa'.");
+        document.getElementById("syncStatusText").textContent = "Modo Offline (Dados Locais)";
+        if (!silencioso) {
+          alert("Não foi possível puxar da planilha agora. Verifique se você já rodou a função 'setupInicial' no Apps Script e se a permissão está como 'Qualquer pessoa'.");
+        }
       }
     }
 
     window.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("inputScriptUrl").value = db.config.scriptUrl || "";
+      document.getElementById("inputScriptUrl").value = db.config.scriptUrl || DEFAULT_SCRIPT_URL;
       carregarDiaSelecionado();
       atualizarTelas();
+      sincronizarPlanilha(true);
     });
   </script>
 </body>
