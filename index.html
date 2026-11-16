@@ -18,29 +18,23 @@
       --radius-pill: 999px;
     }
 
-    /* TEMA ESCURO (OBSIDIAN & TITANIUM EXECUTIVE) */
     [data-theme="dark"] {
       --bg-base: #08090c;
       --bg-gradient: radial-gradient(120% 90% at 50% 0%, #161922 0%, #0b0d12 55%, #07080b 100%);
       --grid-line: rgba(255, 255, 255, 0.025);
-      --ambient-glow: rgba(148, 163, 184, 0.07);
-
       --glass-surface: linear-gradient(145deg, rgba(255, 255, 255, 0.075) 0%, rgba(255, 255, 255, 0.025) 100%);
       --glass-surface-elevated: linear-gradient(145deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
       --glass-border: rgba(255, 255, 255, 0.11);
       --glass-specular-top: rgba(255, 255, 255, 0.28);
       --glass-specular-bottom: rgba(255, 255, 255, 0.04);
       --glass-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.65);
-
       --input-bg: rgba(0, 0, 0, 0.35);
       --input-border: rgba(255, 255, 255, 0.12);
       --input-focus: rgba(255, 255, 255, 0.32);
-
       --text-primary: #f8fafc;
       --text-secondary: #94a3b8;
       --text-muted: #64748b;
       --divider: rgba(255, 255, 255, 0.07);
-
       --accent-primary: #e2e8f0;
       --accent-primary-fg: #090a0f;
       --status-positive: #10b981;
@@ -51,29 +45,23 @@
       --status-danger-bg: rgba(244, 63, 94, 0.12);
     }
 
-    /* TEMA CLARO (PLATINUM & ALABASTER EXECUTIVE) */
     [data-theme="light"] {
       --bg-base: #eef1f6;
       --bg-gradient: radial-gradient(120% 90% at 50% 0%, #ffffff 0%, #eef1f6 60%, #e2e7f0 100%);
       --grid-line: rgba(15, 23, 42, 0.035);
-      --ambient-glow: rgba(15, 23, 42, 0.04);
-
       --glass-surface: linear-gradient(145deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.48) 100%);
       --glass-surface-elevated: linear-gradient(145deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.68) 100%);
       --glass-border: rgba(15, 23, 42, 0.09);
       --glass-specular-top: rgba(255, 255, 255, 0.95);
       --glass-specular-bottom: rgba(15, 23, 42, 0.04);
       --glass-shadow: 0 18px 38px -14px rgba(15, 23, 42, 0.10);
-
       --input-bg: rgba(255, 255, 255, 0.65);
       --input-border: rgba(15, 23, 42, 0.12);
       --input-focus: rgba(15, 23, 42, 0.35);
-
       --text-primary: #0f172a;
       --text-secondary: #475569;
       --text-muted: #94a3b8;
       --divider: rgba(15, 23, 42, 0.07);
-
       --accent-primary: #0f172a;
       --accent-primary-fg: #ffffff;
       --status-positive: #059669;
@@ -102,7 +90,6 @@
       padding-bottom: 110px;
     }
 
-    /* Malha Arquitetônica Sutil de Fundo */
     .architectural-backdrop {
       position: fixed;
       inset: 0;
@@ -116,7 +103,6 @@
       pointer-events: none;
     }
 
-    /* MOTOR YBOUANE/LIQUIDGLASS */
     .lg-surface {
       position: relative;
       background: var(--glass-surface);
@@ -132,7 +118,6 @@
       transition: transform 0.35s var(--ease-spring), border-color 0.3s ease, box-shadow 0.35s var(--ease-spring);
     }
 
-    /* Reflexo dinâmico de luz no vidro (Pointer Glare) */
     .lg-surface::before {
       content: "";
       position: absolute;
@@ -145,10 +130,7 @@
       pointer-events: none;
       z-index: 0;
     }
-    .lg-surface > * {
-      position: relative;
-      z-index: 1;
-    }
+    .lg-surface > * { position: relative; z-index: 1; }
 
     .lg-pill {
       background: var(--glass-surface-elevated);
@@ -159,14 +141,12 @@
       border-radius: var(--radius-pill);
     }
 
-    /* SHELL RESPONSIVO (MOBILE & DESKTOP) */
     .app-shell {
       max-width: 1240px;
       margin: 0 auto;
       padding: 20px 16px;
     }
 
-    /* HEADER EXECUTIVO */
     .header-bar {
       display: flex;
       flex-wrap: wrap;
@@ -177,11 +157,7 @@
       margin-bottom: 24px;
     }
 
-    .brand-block {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .brand-block { display: flex; align-items: center; gap: 12px; }
 
     .brand-mark {
       width: 36px;
@@ -198,37 +174,13 @@
       letter-spacing: -0.04em;
     }
 
-    .brand-name {
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-    }
+    .brand-name { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.08em; }
+    .brand-sub { font-size: 0.68rem; color: var(--text-secondary); letter-spacing: 0.02em; }
 
-    .brand-sub {
-      font-size: 0.68rem;
-      color: var(--text-secondary);
-      letter-spacing: 0.02em;
-    }
+    .desktop-nav { display: none; gap: 4px; padding: 4px; }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
 
-    /* Navegação Desktop Embutida no Header */
-    .desktop-nav {
-      display: none;
-      gap: 4px;
-      padding: 4px;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    /* Seletor de Tema (Auto / Escuro / Claro) */
-    .theme-segmented {
-      display: inline-flex;
-      padding: 3px;
-      gap: 2px;
-    }
+    .theme-segmented { display: inline-flex; padding: 3px; gap: 2px; }
     .theme-btn {
       border: none;
       background: transparent;
@@ -254,42 +206,26 @@
       font-weight: 600;
       color: var(--text-primary);
       cursor: pointer;
-      transition: transform 0.2s var(--ease-spring);
     }
-    .btn-icon-pill:active { transform: scale(0.96); }
 
-    /* BENTO GRID RESPONSIVO */
-    .bento-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-    }
+    .bento-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
 
     @media (min-width: 920px) {
       body { padding-bottom: 40px; }
       .app-shell { padding: 28px 32px; }
       .bottom-dock { display: none !important; }
       .desktop-nav { display: inline-flex; }
-      .bento-grid-hoje {
-        grid-template-columns: 7fr 5fr;
-        align-items: start;
-      }
-      .bento-grid-2col {
-        grid-template-columns: 1fr 1fr;
-        align-items: start;
-      }
+      .bento-grid-hoje { grid-template-columns: 7fr 5fr; align-items: start; }
+      .bento-grid-2col { grid-template-columns: 1fr 1fr; align-items: start; }
     }
 
-    /* KPI ROW */
     .kpi-row {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
       gap: 14px;
       margin-bottom: 18px;
     }
-    .kpi-tile {
-      padding: 20px;
-    }
+    .kpi-tile { padding: 20px; }
     .kpi-meta {
       font-size: 0.72rem;
       font-weight: 600;
@@ -315,11 +251,7 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* PAINÉIS E FORMULÁRIOS */
-    .panel {
-      padding: 22px;
-      margin-bottom: 18px;
-    }
+    .panel { padding: 22px; margin-bottom: 18px; }
     .panel-header {
       display: flex;
       justify-content: space-between;
@@ -327,12 +259,9 @@
       margin-bottom: 18px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--divider);
+      gap: 10px;
     }
-    .panel-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
+    .panel-title { font-size: 0.95rem; font-weight: 600; letter-spacing: -0.01em; }
 
     .control-row {
       display: flex;
@@ -343,17 +272,9 @@
       gap: 12px;
     }
     .control-row:last-of-type { border-bottom: none; }
-    .control-label h4 {
-      font-size: 0.88rem;
-      font-weight: 600;
-    }
-    .control-label p {
-      font-size: 0.74rem;
-      color: var(--text-secondary);
-      margin-top: 2px;
-    }
+    .control-label h4 { font-size: 0.88rem; font-weight: 600; }
+    .control-label p { font-size: 0.74rem; color: var(--text-secondary); margin-top: 2px; }
 
-    /* Steppers e Inputs */
     .stepper-group {
       display: inline-flex;
       align-items: center;
@@ -373,10 +294,8 @@
       font-family: var(--font-mono);
       font-size: 1rem;
       cursor: pointer;
-      transition: background 0.2s ease, transform 0.15s ease;
     }
     .stepper-btn:hover { background: rgba(255, 255, 255, 0.14); }
-    .stepper-btn:active { transform: scale(0.92); }
 
     .input-field {
       background: var(--input-bg);
@@ -391,10 +310,7 @@
       transition: border-color 0.2s ease;
     }
     .input-field:focus { border-color: var(--input-focus); }
-    .input-mono {
-      font-family: var(--font-mono);
-      font-variant-numeric: tabular-nums;
-    }
+    .input-mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
     .input-stepper {
       width: 54px;
       text-align: center;
@@ -408,7 +324,6 @@
       outline: none;
     }
 
-    /* Botões Principais */
     .btn-exec {
       width: 100%;
       padding: 13px 18px;
@@ -418,13 +333,12 @@
       color: var(--accent-primary-fg);
       font-size: 0.86rem;
       font-weight: 600;
-      letter-spacing: -0.01em;
       cursor: pointer;
       margin-top: 14px;
       transition: transform 0.25s var(--ease-spring), opacity 0.2s ease;
     }
     .btn-exec:hover { opacity: 0.92; }
-    .btn-exec:active { transform: scale(0.985); }
+    .btn-exec:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .btn-ghost {
       padding: 8px 13px;
@@ -438,12 +352,20 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: border-color 0.2s ease, transform 0.2s var(--ease-spring);
     }
     .btn-ghost:hover { border-color: var(--input-focus); }
-    .btn-ghost:active { transform: scale(0.96); }
 
-    /* Barra de Progresso SLA 98% */
+    .btn-danger-ghost {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--status-danger-bg);
+      background: var(--status-danger-bg);
+      color: var(--status-danger);
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
     .sla-track {
       width: 100%;
       height: 6px;
@@ -459,7 +381,6 @@
       transition: width 0.5s var(--ease-spring), background-color 0.3s ease;
     }
 
-    /* Status Pills */
     .status-pill {
       padding: 4px 10px;
       border-radius: var(--radius-pill);
@@ -474,7 +395,6 @@
     .pill-warning { background: var(--status-warning-bg); color: var(--status-warning); }
     .pill-danger { background: var(--status-danger-bg); color: var(--status-danger); }
 
-    /* Lista de Registros */
     .data-row {
       padding: 14px;
       border-radius: 14px;
@@ -485,22 +405,15 @@
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      transition: border-color 0.2s ease;
     }
-    .data-row:hover { border-color: var(--glass-border); }
 
-    /* Navegação e Views */
     .view-section { display: none; }
-    .view-section.active {
-      display: block;
-      animation: viewEnter 0.38s var(--ease-spring);
-    }
+    .view-section.active { display: block; animation: viewEnter 0.38s var(--ease-spring); }
     @keyframes viewEnter {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* DOCK MOBILE FLUTUANTE */
     .bottom-dock {
       position: fixed;
       bottom: 16px;
@@ -527,7 +440,6 @@
       align-items: center;
       gap: 4px;
       cursor: pointer;
-      transition: all 0.25s var(--ease-spring);
     }
     .nav-item svg { width: 17px; height: 17px; stroke-width: 1.8; }
     .nav-item.active {
@@ -541,7 +453,6 @@
       gap: 7px;
     }
 
-    /* Modais */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -575,7 +486,6 @@
 </head>
 <body>
 
-  <!-- Filtro Óptico SVG ybouane/liquidglass -->
   <svg width="0" height="0" style="position:absolute; pointer-events:none;">
     <defs>
       <filter id="ybouane-liquid-glass" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
@@ -594,17 +504,15 @@
   <div class="architectural-backdrop"></div>
 
   <div class="app-shell">
-    <!-- BARRA DE TOPO -->
     <header class="header-bar lg-surface">
       <div class="brand-block">
         <div class="brand-mark">LT</div>
         <div>
           <div class="brand-name">LASTRO</div>
-          <div class="brand-sub" id="syncStatusText">Logística, Auditoria, Saldo, TBRs e Recebíveis</div>
+          <div class="brand-sub" id="syncStatusText">Sincronizando com Google Sheets...</div>
         </div>
       </div>
 
-      <!-- Menu Desktop -->
       <nav class="desktop-nav lg-pill">
         <button class="nav-item active" data-target="hoje" onclick="mudarAba('hoje')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
@@ -629,12 +537,12 @@
       </nav>
 
       <div class="header-actions">
-        <div class="theme-segmented lg-pill" role="group" aria-label="Seletor de Tema">
+        <div class="theme-segmented lg-pill">
           <button class="theme-btn" id="btnThemeAuto" onclick="definirTema('auto')">Auto</button>
           <button class="theme-btn" id="btnThemeDark" onclick="definirTema('dark')">Escuro</button>
           <button class="theme-btn" id="btnThemeLight" onclick="definirTema('light')">Claro</button>
         </div>
-        <button class="btn-icon-pill lg-pill" onclick="sincronizarPlanilha(false)" title="Sincronizar com Google Sheets">
+        <button class="btn-icon-pill lg-pill" onclick="sincronizarPlanilha(false)">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
           Sync
         </button>
@@ -655,11 +563,11 @@
 
         <div class="kpi-tile lg-surface">
           <div class="kpi-meta">
-            <span>Acumulado Ciclo (08/11 a 14/11)</span>
-            <span>Dom–Sáb</span>
+            <span>Acumulado Ciclo Atual</span>
+            <span id="labelCicloAtualHeader">08/11 a 14/11</span>
           </div>
-          <div class="kpi-number" id="kpiSemanaBruto">R$ 559,02</div>
-          <div class="kpi-foot" id="kpiSemanaPct">242 pacotes entregues + R$ 20,00 bônus</div>
+          <div class="kpi-number" id="kpiSemanaBruto">R$ 0,00</div>
+          <div class="kpi-foot" id="kpiSemanaPct">0 pacotes entregues</div>
         </div>
 
         <div class="kpi-tile lg-surface">
@@ -675,7 +583,6 @@
       </div>
 
       <div class="bento-grid bento-grid-hoje">
-        <!-- Coluna Esquerda: Lançamento Operacional -->
         <div class="panel lg-surface">
           <div class="panel-header">
             <span class="panel-title">Fechamento Operacional Diário</span>
@@ -751,10 +658,9 @@
             <input type="checkbox" id="checkFolga" style="width:18px; height:18px; accent-color: var(--accent-primary);" onchange="recalcularDia()" />
           </div>
 
-          <button class="btn-exec" onclick="salvarLancamentoDia()">Salvar Fechamento Operacional</button>
+          <button class="btn-exec" id="btnSalvarDia" onclick="salvarLancamentoDia()">Salvar Fechamento Operacional</button>
         </div>
 
-        <!-- Coluna Direita: Resumo Rápido da Semana e Pendências -->
         <div>
           <div class="panel lg-surface">
             <div class="panel-header">
@@ -792,33 +698,31 @@
         <div class="kpi-tile lg-surface">
           <div class="kpi-meta"><span>Saldo Total A Receber</span></div>
           <div class="kpi-number" id="finTotalAReceber" style="color:var(--status-warning)">R$ 0,00</div>
-          <div class="kpi-foot" id="finSubAReceber">Ciclo aberto + saldo de bônus não quitados</div>
+          <div class="kpi-foot" id="finSubAReceber">Ciclo aberto + bônus/indicações em aberto</div>
         </div>
         <div class="kpi-tile lg-surface">
           <div class="kpi-meta"><span>Bônus Pendentes de Pagamento</span></div>
-          <div class="kpi-number" id="finBonusPendente" style="color:var(--status-danger)">R$ 140,00</div>
+          <div class="kpi-number" id="finBonusPendente" style="color:var(--status-danger)">R$ 0,00</div>
           <div class="kpi-foot">Abatimento parcial disponível por lançamento</div>
         </div>
         <div class="kpi-tile lg-surface">
           <div class="kpi-meta"><span>Total Liquidado (Declarações PDF)</span></div>
-          <div class="kpi-number" id="finTotalPago" style="color:var(--status-positive)">R$ 2.868,11</div>
-          <div class="kpi-foot">9 notas fiscais conciliadas</div>
+          <div class="kpi-number" id="finTotalPago" style="color:var(--status-positive)">R$ 0,00</div>
+          <div class="kpi-foot">Notas fiscais + indicações quitadas</div>
         </div>
       </div>
 
       <div class="bento-grid bento-grid-2col">
-        <!-- Auditoria de Bônus com Pagamento Parcial -->
         <div class="panel lg-surface">
           <div class="panel-header">
             <span class="panel-title">Auditoria de Bônus (Controle de Pagamento Parcial)</span>
           </div>
           <p style="font-size:0.76rem; color:var(--text-secondary); margin-bottom:14px;">
-            Informe exatamente quanto foi pago de cada bônus ofertado. O saldo restante permanece em cobrança automática.
+            Informe quanto foi pago de cada bônus ofertado. O saldo restante permanece em cobrança automática.
           </p>
           <div id="listaBonusPendentes"></div>
         </div>
 
-        <!-- Declarações de Lucros -->
         <div class="panel lg-surface">
           <div class="panel-header">
             <span class="panel-title">Declarações de Lucros & Faturas Semanais</span>
@@ -836,7 +740,7 @@
           <button class="btn-ghost" onclick="adicionarIndicacaoPrompt()">+ Novo Indicado</button>
         </div>
         <p style="font-size:0.78rem; color:var(--text-secondary); margin-bottom:16px;">
-          Repasse dividido em duas parcelas de R$ 125,00: a 1ª na ativação do parceiro e a 2ª após 30 dias de operação.
+          Informe a data em que a nota fiscal de cada parcela (R$ 125,00) foi emitida. O valor será somado automaticamente ao cálculo da respectiva semana.
         </p>
         <div id="listaIndicacoesContainer" class="bento-grid bento-grid-2col"></div>
       </div>
@@ -870,14 +774,11 @@
               <option value="Safe Hut">Safe Hut (Coleta Externa)</option>
             </select>
           </div>
-          <button class="btn-ghost" style="width:100%; justify-content:center; margin-top:6px;" onclick="restaurarPadraoLimpo()">
-            Recarregar Base Limpa (Zerar 13/11 e TBRs)
-          </button>
         </div>
 
         <div class="panel lg-surface">
           <div class="panel-header">
-            <span class="panel-title">Registro Histórico Completo (Outubro / Novembro)</span>
+            <span class="panel-title">Registro Histórico Completo</span>
           </div>
           <div id="listaHistoricoDiario"></div>
         </div>
@@ -892,9 +793,7 @@
         <span class="panel-title">Registrar Pacote para Devolução</span>
         <button class="btn-ghost" onclick="fecharModalTBR()">Fechar</button>
       </div>
-
       <div id="reader"></div>
-
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
         <button class="btn-ghost" style="justify-content:center;" onclick="iniciarLeitorCodigo()">Ler Código de Barras</button>
         <label class="btn-ghost" style="justify-content:center; cursor:pointer;">
@@ -902,14 +801,11 @@
           <input type="file" accept="image/*" capture="environment" style="display:none" onchange="capturarFotoPacote(event)" />
         </label>
       </div>
-
       <img id="imgPreviewTBR" class="preview-img" alt="Evidência TBR" />
-
       <div style="margin-top:12px;">
         <label style="font-size:0.74rem; color:var(--text-secondary);">Código TBR (Padrão TBR + 9 a 11 dígitos)</label>
         <input type="text" id="inputCodigoTBR" class="input-field input-mono" style="width:100%; margin-top:5px; text-transform:uppercase;" placeholder="TBR000000000" value="TBR" />
       </div>
-
       <div style="margin-top:12px;">
         <label style="font-size:0.74rem; color:var(--text-secondary);">Classificação da Ocorrência</label>
         <select id="selectMotivoTBR" class="input-field" style="width:100%; margin-top:5px;">
@@ -917,12 +813,10 @@
           <option value="Danificado">Avaria / Danificado</option>
         </select>
       </div>
-
       <div style="margin-top:12px;">
         <label style="font-size:0.74rem; color:var(--text-secondary);">Identificação Auxiliar (Driver Aid / Endereço)</label>
         <input type="text" id="inputObsTBR" class="input-field" style="width:100%; margin-top:5px;" placeholder="Ex: Etiqueta amarela 034" />
       </div>
-
       <button class="btn-exec" onclick="confirmarRegistroTBR()">Confirmar Inclusão de TBR</button>
     </div>
   </div>
@@ -976,13 +870,23 @@
 
   <script>
     const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbySoITRQ5YHnR0MPjfZiJ4pqFJIrKwoPCPkxuIbVbr6cYSQrgD0M4vTYKDDjfTELW9V/exec";
+    const STORAGE_KEY = "lastro_db_v4";
 
-    // BASE ATUALIZADA:
-    // - Sem o dia 13/11 (para alimentação manual)
-    // - Fila de TBRs zerada
-    // - Bônus 27/10 (R$ 30) PAGO
-    // - Bônus 24/10 (R$ 120 resgate Michel e Rodrigo) NÃO PAGO e com suporte a pagamento parcial (Bonus_Pago)
-    const ESTADO_INICIAL = {
+    // Calcula automaticamente o ciclo Domingo a Sábado de qualquer data YYYY-MM-DD
+    function calcularCicloSemanal(dataStr) {
+      if (!dataStr) return "08/11 a 14/11";
+      const [ano, mes, dia] = dataStr.split("-").map(Number);
+      const dt = new Date(ano, mes - 1, dia, 12, 0, 0);
+      const dow = dt.getDay(); // 0 = Domingo ... 6 = Sábado
+      const dom = new Date(dt);
+      dom.setDate(dt.getDate() - dow);
+      const sab = new Date(dom);
+      sab.setDate(dom.getDate() + 6);
+      const fmt = (d) => `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}`;
+      return `${fmt(dom)} a ${fmt(sab)}`;
+    }
+
+    const ESTADO_BASE = {
       config: {
         tarifaBruta: 2.31,
         tarifaLiquida: 2.15,
@@ -990,78 +894,19 @@
         scriptUrl: DEFAULT_SCRIPT_URL,
         themePref: "auto"
       },
-      entregas: [
-        { Data: "2026-10-07", Semana_Ciclo: "04/10 a 10/10", Entregues_Normal: 2, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 80, Bonus_Pago: 80, Bonus_Status: "Pago", Valor_Bruto_Dia: 4.62, Valor_Liquido_Dia: 4.30, Folga: false },
-        { Data: "2026-10-08", Semana_Ciclo: "04/10 a 10/10", Entregues_Normal: 2, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 40, Bonus_Pago: 40, Bonus_Status: "Pago", Valor_Bruto_Dia: 4.62, Valor_Liquido_Dia: 4.30, Folga: false },
-        { Data: "2026-10-09", Semana_Ciclo: "04/10 a 10/10", Entregues_Normal: 18, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 30, Bonus_Pago: 30, Bonus_Status: "Pago", Valor_Bruto_Dia: 41.58, Valor_Liquido_Dia: 38.70, Folga: false },
-        { Data: "2026-10-10", Semana_Ciclo: "04/10 a 10/10", Entregues_Normal: 9, Tentar_Novamente: 9, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 43, Resgate_Origem: "Estação (52 c/ 9 insuc.)", Resgate_Valor_Bruto: 99.33, Bonus_Ofertado: 75, Bonus_Pago: 75, Bonus_Status: "Pago", Valor_Bruto_Dia: 120.12, Valor_Liquido_Dia: 111.80, Folga: false },
-        { Data: "2026-10-11", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 26, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 50, Bonus_Pago: 50, Bonus_Status: "Pago", Valor_Bruto_Dia: 60.06, Valor_Liquido_Dia: 55.90, Folga: false },
-        { Data: "2026-10-13", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 15, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 34.65, Valor_Liquido_Dia: 32.25, Folga: false },
-        { Data: "2026-10-14", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 0, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 0, Valor_Liquido_Dia: 0, Folga: true },
-        { Data: "2026-10-15", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 14, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 32.34, Valor_Liquido_Dia: 30.10, Folga: false },
-        { Data: "2026-10-16", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 0, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 0, Valor_Liquido_Dia: 0, Folga: true },
-        { Data: "2026-10-17", Semana_Ciclo: "11/10 a 17/10", Entregues_Normal: 60, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 8, Resgate_Origem: "HUB Ofensor", Resgate_Valor_Bruto: 18.48, Bonus_Ofertado: 50, Bonus_Pago: 50, Bonus_Status: "Pago", Valor_Bruto_Dia: 157.08, Valor_Liquido_Dia: 146.20, Folga: false },
-        { Data: "2026-10-18", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 58, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 30, Bonus_Pago: 30, Bonus_Status: "Pago", Valor_Bruto_Dia: 133.98, Valor_Liquido_Dia: 124.70, Folga: false },
-        { Data: "2026-10-19", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 23, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 53.13, Valor_Liquido_Dia: 49.45, Folga: false },
-        { Data: "2026-10-20", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 20, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 50, Bonus_Pago: 50, Bonus_Status: "Pago", Valor_Bruto_Dia: 46.20, Valor_Liquido_Dia: 43.00, Folga: false },
-        { Data: "2026-10-21", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 27, Tentar_Novamente: 3, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 62.37, Valor_Liquido_Dia: 58.05, Folga: false },
-        { Data: "2026-10-22", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 61, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 140.91, Valor_Liquido_Dia: 131.15, Folga: false },
-        { Data: "2026-10-23", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 32, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 50, Bonus_Pago: 50, Bonus_Status: "Pago", Valor_Bruto_Dia: 73.92, Valor_Liquido_Dia: 68.80, Folga: false },
-        { Data: "2026-10-24", Semana_Ciclo: "18/10 a 24/10", Entregues_Normal: 32, Tentar_Novamente: 0, Fora_De_Rota: 4, Danificados: 0, Resgate_Qtd: 56, Resgate_Origem: "Michel (20) + Rodrigo (36)", Resgate_Valor_Bruto: 122.60, Bonus_Ofertado: 120, Bonus_Pago: 0, Bonus_Status: "A Receber", Valor_Bruto_Dia: 196.52, Valor_Liquido_Dia: 189.20, Folga: false },
-        { Data: "2026-10-25", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 60, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 138.60, Valor_Liquido_Dia: 129.00, Folga: false },
-        { Data: "2026-10-26", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 0, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 0, Valor_Liquido_Dia: 0, Folga: true },
-        { Data: "2026-10-27", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 40, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 30, Bonus_Pago: 30, Bonus_Status: "Pago", Valor_Bruto_Dia: 92.40, Valor_Liquido_Dia: 86.00, Folga: false },
-        { Data: "2026-10-28", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 36, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 83.16, Valor_Liquido_Dia: 77.40, Folga: false },
-        { Data: "2026-10-29", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 59, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 136.29, Valor_Liquido_Dia: 126.85, Folga: false },
-        { Data: "2026-10-30", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 47, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 108.57, Valor_Liquido_Dia: 101.05, Folga: false },
-        { Data: "2026-10-31", Semana_Ciclo: "25/10 a 31/10", Entregues_Normal: 46, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 106.26, Valor_Liquido_Dia: 98.90, Folga: false },
-        { Data: "2026-11-01", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 18, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 41.58, Valor_Liquido_Dia: 38.70, Folga: false },
-        { Data: "2026-11-02", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 48, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 110.88, Valor_Liquido_Dia: 103.20, Folga: false },
-        { Data: "2026-11-03", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 42, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 97.02, Valor_Liquido_Dia: 90.30, Folga: false },
-        { Data: "2026-11-04", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 43, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 99.33, Valor_Liquido_Dia: 92.45, Folga: false },
-        { Data: "2026-11-05", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 40, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 92.40, Valor_Liquido_Dia: 86.00, Folga: false },
-        { Data: "2026-11-06", Semana_Ciclo: "01/11 a 07/11", Entregues_Normal: 41, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 94.71, Valor_Liquido_Dia: 88.15, Folga: false },
-        { Data: "2026-11-08", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 46, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 106.26, Valor_Liquido_Dia: 98.90, Folga: false },
-        { Data: "2026-11-09", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 58, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 133.98, Valor_Liquido_Dia: 124.70, Folga: false },
-        { Data: "2026-11-10", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 43, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 99.33, Valor_Liquido_Dia: 92.45, Folga: false },
-        { Data: "2026-11-11", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 58, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 0, Resgate_Origem: "", Resgate_Valor_Bruto: 0, Bonus_Ofertado: 0, Bonus_Pago: 0, Bonus_Status: "-", Valor_Bruto_Dia: 133.98, Valor_Liquido_Dia: 124.70, Folga: false },
-        { Data: "2026-11-12", Semana_Ciclo: "08/11 a 14/11", Entregues_Normal: 28, Tentar_Novamente: 0, Fora_De_Rota: 0, Danificados: 0, Resgate_Qtd: 9, Resgate_Origem: "HUB Ofensor", Resgate_Valor_Bruto: 20.79, Bonus_Ofertado: 20, Bonus_Pago: 0, Bonus_Status: "A Receber", Valor_Bruto_Dia: 85.47, Valor_Liquido_Dia: 79.55, Folga: false }
-      ],
+      entregas: [],
       devolucoes: [],
-      notas: [
-        { ID_Nota: "D7B18BE733FF49E4962A4F9DCC1D7B3E", Tipo: "Entregas", Periodo_Servico: "04/10 a 10/10", Data_Emissao: "2026-10-11", Pacotes_Anotados: 74, Pacotes_Nota_Amazon: 66, Valor_Bruto: 152.47, Valor_Liquido: 138.36, Status: "Pago" },
-        { ID_Nota: "E247715F20E241D29FA3CEC0ABE81EBE", Tipo: "Entregas", Periodo_Servico: "11/10 a 17/10", Data_Emissao: "2026-10-18", Pacotes_Anotados: 123, Pacotes_Nota_Amazon: 124, Valor_Bruto: 286.44, Valor_Liquido: 264.97, Status: "Pago" },
-        { ID_Nota: "3988567BD9BD4CEEBE0AF4D118939C3C", Tipo: "Bônus", Periodo_Servico: "20/10/2026", Data_Emissao: "2026-10-20", Pacotes_Anotados: 0, Pacotes_Nota_Amazon: 1, Valor_Bruto: 175.00, Valor_Liquido: 162.86, Status: "Pago" },
-        { ID_Nota: "47341477A4CE48FA8864D4A20E8A8B4F", Tipo: "Entregas", Periodo_Servico: "18/10 a 24/10", Data_Emissao: "2026-10-25", Pacotes_Anotados: 277, Pacotes_Nota_Amazon: 269, Valor_Bruto: 621.39, Valor_Liquido: 578.28, Status: "Pago" },
-        { ID_Nota: "D64FBD07927E461B95FBBC52D74A6595", Tipo: "Bônus", Periodo_Servico: "27/10/2026", Data_Emissao: "2026-10-27", Pacotes_Anotados: 0, Pacotes_Nota_Amazon: 1, Valor_Bruto: 230.00, Valor_Liquido: 214.04, Status: "Pago" },
-        { ID_Nota: "A36AB6D356624E08B9E87EB8097F5653", Tipo: "Entregas", Periodo_Servico: "25/10 a 31/10", Data_Emissao: "2026-11-01", Pacotes_Anotados: 288, Pacotes_Nota_Amazon: 293, Valor_Bruto: 676.83, Valor_Liquido: 629.87, Status: "Pago" },
-        { ID_Nota: "180138CD85524CEC8DD7B2FD60B0404D", Tipo: "Bônus", Periodo_Servico: "03/11/2026", Data_Emissao: "2026-11-03", Pacotes_Anotados: 0, Pacotes_Nota_Amazon: 1, Valor_Bruto: 80.00, Valor_Liquido: 74.45, Status: "Pago" },
-        { ID_Nota: "D46C8BB41E704D538D370CE3A2C81A26", Tipo: "Bônus", Periodo_Servico: "05/11/2026", Data_Emissao: "2026-11-06", Pacotes_Anotados: 0, Pacotes_Nota_Amazon: 1, Valor_Bruto: 50.00, Valor_Liquido: 46.53, Status: "Pago" },
-        { ID_Nota: "4A10B659F9664B42901BAF39033745EA", Tipo: "Entregas", Periodo_Servico: "01/11 a 07/11", Data_Emissao: "2026-11-08", Pacotes_Anotados: 232, Pacotes_Nota_Amazon: 258, Valor_Bruto: 595.98, Valor_Liquido: 554.63, Status: "Pago" },
-        { ID_Nota: "CICLO-0811-1411", Tipo: "Entregas", Periodo_Servico: "08/11 a 14/11", Data_Emissao: "2026-11-15", Pacotes_Anotados: 242, Pacotes_Nota_Amazon: 242, Valor_Bruto: 559.02, Valor_Liquido: 520.30, Status: "A Receber" }
-      ],
-      indicacoes: [
-        { ID: "IND-1", Nome_Indicado: "Michel", Data_Inicio: "2026-10-15", Data_30_Dias: "2026-11-14", Valor_Total: 250, Parcela_1_Inicio: "Pago", Parcela_2_30Dias: "Pendente" },
-        { ID: "IND-2", Nome_Indicado: "Rodrigo", Data_Inicio: "2026-10-20", Data_30_Dias: "2026-11-19", Valor_Total: 250, Parcela_1_Inicio: "Pago", Parcela_2_30Dias: "Pendente" }
-      ]
+      notas: [],
+      indicacoes: []
     };
 
-    const STORAGE_KEY = "lastro_db_v3";
-    let db = JSON.parse(localStorage.getItem(STORAGE_KEY)) || structuredClone(ESTADO_INICIAL);
-    if (!db.config) db.config = structuredClone(ESTADO_INICIAL.config);
+    let db = JSON.parse(localStorage.getItem(STORAGE_KEY)) || structuredClone(ESTADO_BASE);
+    if (!db.config) db.config = structuredClone(ESTADO_BASE.config);
     if (!db.config.scriptUrl) db.config.scriptUrl = DEFAULT_SCRIPT_URL;
-
-    // Garante que cada registro de bônus possua a propriedade numérica Bonus_Pago
-    db.entregas.forEach(d => {
-      if (typeof d.Bonus_Pago === "undefined") {
-        d.Bonus_Pago = d.Bonus_Status === "Pago" ? Number(d.Bonus_Ofertado || 0) : 0;
-      }
-    });
 
     let fotoBase64Atual = "";
     let html5QrCode = null;
 
-    // EFEITO DE REFRAÇÃO DINÂMICA (YBOUANE/LIQUIDGLASS GLARE)
     document.addEventListener("pointermove", (e) => {
       document.querySelectorAll(".lg-surface").forEach(card => {
         const rect = card.getBoundingClientRect();
@@ -1070,7 +915,6 @@
       });
     });
 
-    // GERENCIAMENTO DE TEMA (AUTO / ESCURO / CLARO)
     const mediaDark = window.matchMedia("(prefers-color-scheme: dark)");
     mediaDark.addEventListener("change", () => {
       if ((db.config.themePref || "auto") === "auto") aplicarTemaDOM("auto");
@@ -1092,14 +936,6 @@
 
     function salvarLocal() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-    }
-
-    function restaurarPadraoLimpo() {
-      if (!confirm("Recarregar a base padrão (13/11 zerado, TBRs zerados e bônus de R$ 120 pendente)?")) return;
-      db = structuredClone(ESTADO_INICIAL);
-      salvarLocal();
-      carregarDiaSelecionado();
-      atualizarTelas();
     }
 
     function formatBRL(v) {
@@ -1128,6 +964,7 @@
       const tbrsDia = db.devolucoes.filter(t => t.Data_Recebimento === dataSel);
 
       document.getElementById("badgeTotalDevolucoesDia").textContent = `${tbrsDia.length} TBRs`;
+      document.getElementById("labelCicloAtualHeader").textContent = calcularCicloSemanal(dataSel);
 
       if (reg) {
         document.getElementById("inputEntregues").value = reg.Entregues_Normal || 0;
@@ -1147,6 +984,7 @@
         document.getElementById("checkFolga").checked = false;
       }
       recalcularDia(false);
+      atualizarTelas();
     }
 
     function recalcularDia(atualizarValorResgatePadrao = false) {
@@ -1185,8 +1023,32 @@
       barEl.style.backgroundColor = cor;
     }
 
+    // ENVIA PARA A PLANILHA E PUXA OS DADOS ATUALIZADOS AUTOMATICAMENTE
+    async function enviarESincronizar(payload, botaoOpcional = null) {
+      const url = db.config.scriptUrl || DEFAULT_SCRIPT_URL;
+      if (botaoOpcional) botaoOpcional.disabled = true;
+      try {
+        document.getElementById("syncStatusText").textContent = "Salvando na planilha...";
+        await fetch(url, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+        // Aguarda o Google Sheets concluir a escrita e puxa o estado atualizado
+        await new Promise(r => setTimeout(r, 900));
+        await sincronizarPlanilha(true);
+      } catch (e) {
+        document.getElementById("syncStatusText").textContent = "Salvo localmente (offline)";
+      } finally {
+        if (botaoOpcional) botaoOpcional.disabled = false;
+      }
+    }
+
     async function salvarLancamentoDia() {
+      const btn = document.getElementById("btnSalvarDia");
       const dataSel = document.getElementById("inputDataDia").value;
+      const ciclo = calcularCicloSemanal(dataSel);
       const tarifaBruta = parseFloat(db.config.tarifaBruta) || 2.31;
       const tarifaLiq = parseFloat(db.config.tarifaLiquida) || 2.15;
 
@@ -1207,7 +1069,7 @@
 
       const novoItem = {
         Data: dataSel,
-        Semana_Ciclo: "08/11 a 14/11",
+        Semana_Ciclo: ciclo,
         Entregues_Normal: entregues,
         Tentar_Novamente: tentarNov,
         Fora_De_Rota: foraRota,
@@ -1227,29 +1089,11 @@
       if (idx >= 0) db.entregas[idx] = novoItem;
       else db.entregas.push(novoItem);
 
-      // Atualiza o resumo da nota do ciclo atual (08/11 a 14/11)
-      atualizarNotaCicloAtual();
       salvarLocal();
       atualizarTelas();
-      await enviarPostPlanilha({ action: "salvarDia", item: novoItem });
+      await enviarESincronizar({ action: "salvarDia", item: novoItem }, btn);
     }
 
-    function atualizarNotaCicloAtual() {
-      const entregasCiclo = db.entregas.filter(d => d.Semana_Ciclo === "08/11 a 14/11");
-      const totalPct = entregasCiclo.reduce((a, d) => a + Number(d.Entregues_Normal || 0) + Number(d.Resgate_Qtd || 0), 0);
-      const totalBruto = entregasCiclo.reduce((a, d) => a + Number(d.Valor_Bruto_Dia || 0), 0);
-      const totalLiq = entregasCiclo.reduce((a, d) => a + Number(d.Valor_Liquido_Dia || 0), 0);
-
-      const notaCiclo = db.notas.find(n => n.ID_Nota === "CICLO-0811-1411");
-      if (notaCiclo) {
-        notaCiclo.Pacotes_Anotados = totalPct;
-        notaCiclo.Pacotes_Nota_Amazon = totalPct;
-        notaCiclo.Valor_Bruto = Number(totalBruto.toFixed(2));
-        notaCiclo.Valor_Liquido = Number(totalLiq.toFixed(2));
-      }
-    }
-
-    // AUDITORIA PARCIAL DE BÔNUS
     async function atualizarValorBonusPago(dataDia, valorDigitado) {
       const reg = db.entregas.find(d => d.Data === dataDia);
       if (!reg) return;
@@ -1260,7 +1104,7 @@
 
       salvarLocal();
       atualizarTelas();
-      await enviarPostPlanilha({ action: "salvarDia", item: reg });
+      await enviarESincronizar({ action: "salvarDia", item: reg });
     }
 
     // GESTÃO DE TBRs
@@ -1319,14 +1163,14 @@
       const novoTBR = {
         ID: "TBR-" + Date.now(),
         Mes_Ref: dataReceb.slice(0, 7),
-        Semana_Ciclo: "08/11 a 14/11",
+        Semana_Ciclo: calcularCicloSemanal(dataReceb),
         Data_Recebimento: dataReceb,
         TBR: codigo,
         Motivo: motivo,
         Status_Devolucao: "Pendente",
         Data_Devolucao: "",
         Motorista_Recebedor: "",
-        Foto_Drive_URL: fotoBase64Atual || "",
+        Foto_Drive_URL: "",
         Observacoes: obs
       };
 
@@ -1336,7 +1180,7 @@
       carregarDiaSelecionado();
       atualizarTelas();
 
-      await enviarPostPlanilha({ action: "registrarTBR", item: novoTBR, fotoBase64: fotoBase64Atual });
+      await enviarESincronizar({ action: "registrarTBR", item: novoTBR, fotoBase64: fotoBase64Atual });
     }
 
     function abrirModalBaixa(id) {
@@ -1365,7 +1209,7 @@
       fecharModalBaixa();
       atualizarTelas();
 
-      await enviarPostPlanilha({ action: "baixarDevolucaoTBR", id, dataDevolucao: dataDev, motorista });
+      await enviarESincronizar({ action: "baixarDevolucaoTBR", id, dataDevolucao: dataDev, motorista });
     }
 
     function renderizarListaTBR() {
@@ -1377,7 +1221,7 @@
         String(t.Data_Recebimento || "").includes(termo)
       );
 
-      const htmlLista = filtrados.map(t => `
+      cont.innerHTML = filtrados.map(t => `
         <div class="data-row">
           <div>
             <div style="font-family:var(--font-mono); font-weight:700; font-size:0.92rem;">${t.TBR}</div>
@@ -1398,11 +1242,8 @@
             }
           </div>
         </div>
-      `).join("");
+      `).join("") || `<div style="padding:18px 0; font-size:0.82rem; color:var(--text-secondary); text-align:center;">Nenhum pacote pendente ou registrado na custódia de devolução.</div>`;
 
-      cont.innerHTML = htmlLista || `<div style="padding:18px 0; font-size:0.82rem; color:var(--text-secondary); text-align:center;">Nenhum pacote pendente ou registrado na custódia de devolução.</div>`;
-
-      // Atualiza também o card lateral da aba Operação
       const pendentes = db.devolucoes.filter(t => t.Status_Devolucao !== "Devolvido");
       document.getElementById("resumoTbrHojeContainer").innerHTML = pendentes.length
         ? pendentes.map(t => `
@@ -1417,23 +1258,35 @@
         : `<div style="font-size:0.78rem; color:var(--text-secondary);">Zero pacotes pendentes de devolução no momento.</div>`;
     }
 
-    async function alternarStatusNota(idNota) {
-      const nota = db.notas.find(n => n.ID_Nota === idNota);
-      if (!nota) return;
-      nota.Status = nota.Status === "Pago" ? "A Receber" : "Pago";
-      salvarLocal();
-      atualizarTelas();
-      await enviarPostPlanilha({ action: "atualizarStatusNota", idNota, novoStatus: nota.Status });
+    // INDICAÇÕES (COM DATA DA NOTA ENTRANDO NO CÁLCULO DA RESPECTIVA SEMANA)
+    function calcularIndicacoesPorCiclo(cicloAlvo) {
+      let totalCiclo = 0;
+      db.indicacoes.forEach(ind => {
+        if (ind.Data_Nota_1 && calcularCicloSemanal(ind.Data_Nota_1) === cicloAlvo) {
+          totalCiclo += 125;
+        }
+        if (ind.Data_Nota_2 && calcularCicloSemanal(ind.Data_Nota_2) === cicloAlvo) {
+          totalCiclo += 125;
+        }
+      });
+      return totalCiclo;
     }
 
-    async function alternarParcelaIndicacao(id, qualParcela) {
-      const ind = db.indicacoes.find(i => i.ID === id);
+    async function atualizarParcelaIndicacao(id, qualParcela, campo, valor) {
+      const ind = db.indicacoes.find(i => String(i.ID) === String(id));
       if (!ind) return;
-      if (qualParcela === 1) ind.Parcela_1_Inicio = ind.Parcela_1_Inicio === "Pago" ? "Pendente" : "Pago";
-      if (qualParcela === 2) ind.Parcela_2_30Dias = ind.Parcela_2_30Dias === "Pago" ? "Pendente" : "Pago";
+
+      if (qualParcela === 1) {
+        if (campo === "status") ind.Parcela_1_Inicio = ind.Parcela_1_Inicio === "Pago" ? "Pendente" : "Pago";
+        if (campo === "data") ind.Data_Nota_1 = valor;
+      } else {
+        if (campo === "status") ind.Parcela_2_30Dias = ind.Parcela_2_30Dias === "Pago" ? "Pendente" : "Pago";
+        if (campo === "data") ind.Data_Nota_2 = valor;
+      }
+
       salvarLocal();
       atualizarTelas();
-      await enviarPostPlanilha({ action: "salvarIndicacao", item: ind });
+      await enviarESincronizar({ action: "salvarIndicacao", item: ind });
     }
 
     async function adicionarIndicacaoPrompt() {
@@ -1453,26 +1306,50 @@
         Data_30_Dias: data30Str,
         Valor_Total: 250,
         Parcela_1_Inicio: "Pendente",
-        Parcela_2_30Dias: "Pendente"
+        Data_Nota_1: "",
+        Parcela_2_30Dias: "Pendente",
+        Data_Nota_2: ""
       };
       db.indicacoes.push(nova);
       salvarLocal();
       atualizarTelas();
-      await enviarPostPlanilha({ action: "salvarIndicacao", item: nova });
+      await enviarESincronizar({ action: "salvarIndicacao", item: nova });
+    }
+
+    async function excluirIndicacao(id) {
+      if (!confirm("Remover este indicado da planilha e do aplicativo?")) return;
+      db.indicacoes = db.indicacoes.filter(i => String(i.ID) !== String(id));
+      salvarLocal();
+      atualizarTelas();
+      await enviarESincronizar({ action: "excluirIndicacao", id });
+    }
+
+    async function alternarStatusNota(idNota) {
+      const nota = db.notas.find(n => String(n.ID_Nota) === String(idNota));
+      if (!nota) return;
+      nota.Status = nota.Status === "Pago" ? "A Receber" : "Pago";
+      salvarLocal();
+      atualizarTelas();
+      await enviarESincronizar({ action: "atualizarStatusNota", idNota, novoStatus: nota.Status });
     }
 
     function atualizarTelas() {
-      atualizarNotaCicloAtual();
       renderizarListaTBR();
 
-      // Semana Atual (08/11 a 14/11)
-      const entregasSemana = db.entregas.filter(d => d.Semana_Ciclo === "08/11 a 14/11");
-      const brutoSemana = entregasSemana.reduce((acc, d) => acc + (Number(d.Valor_Bruto_Dia) || 0), 0);
+      const dataSel = document.getElementById("inputDataDia").value;
+      const cicloAtual = calcularCicloSemanal(dataSel);
+
+      // Soma Entregas + Resgates + Indicações faturadas naquela semana
+      const entregasSemana = db.entregas.filter(d => d.Semana_Ciclo === cicloAtual);
+      const brutoEntregasSemana = entregasSemana.reduce((acc, d) => acc + (Number(d.Valor_Bruto_Dia) || 0), 0);
       const pctSemana = entregasSemana.reduce((acc, d) => acc + (Number(d.Entregues_Normal) || 0) + (Number(d.Resgate_Qtd) || 0), 0);
       const bonusSemana = entregasSemana.reduce((acc, d) => acc + (Number(d.Bonus_Ofertado) || 0), 0);
+      const indicacoesSemana = calcularIndicacoesPorCiclo(cicloAtual);
 
-      document.getElementById("kpiSemanaBruto").textContent = formatBRL(brutoSemana);
-      document.getElementById("kpiSemanaPct").textContent = `${pctSemana} pacotes entregues + ${formatBRL(bonusSemana)} bônus`;
+      const totalBrutoSemana = brutoEntregasSemana + indicacoesSemana;
+      document.getElementById("kpiSemanaBruto").textContent = formatBRL(totalBrutoSemana);
+      document.getElementById("kpiSemanaPct").textContent =
+        `${pctSemana} pcts${bonusSemana > 0 ? ` + ${formatBRL(bonusSemana)} bônus` : ""}${indicacoesSemana > 0 ? ` + ${formatBRL(indicacoesSemana)} indicação` : ""}`;
 
       // Últimos lançamentos na tela principal
       document.getElementById("resumoUltimosDiasContainer").innerHTML = entregasSemana.slice(-4).reverse().map(d => `
@@ -1487,23 +1364,23 @@
             ${formatBRL(d.Valor_Bruto_Dia)}
           </div>
         </div>
-      `).join("");
+      `).join("") || `<div style="font-size:0.78rem; color:var(--text-secondary);">Nenhum lançamento registrado neste ciclo.</div>`;
 
-      // Auditoria de Bônus (Com controle de pagamento parcial, ex: 100 pago de 120)
+      // Auditoria de Bônus (Com pagamento parcial)
       const diasComBonus = db.entregas.filter(d => Number(d.Bonus_Ofertado) > 0);
       let somaRestanteBonus = 0;
 
-      const bonusPendentesOuParciais = diasComBonus.filter(d => {
+      const bonusEmAberto = diasComBonus.filter(d => {
         const ofertado = Number(d.Bonus_Ofertado || 0);
         const pago = Number(d.Bonus_Pago || 0);
         const restante = Math.max(0, ofertado - pago);
         somaRestanteBonus += restante;
-        return restante > 0 || d.Data === "2026-10-24" || d.Data === "2026-11-12";
+        return restante > 0 || d.Bonus_Status === "Parcial" || d.Bonus_Status === "A Receber";
       });
 
       document.getElementById("finBonusPendente").textContent = formatBRL(somaRestanteBonus);
 
-      document.getElementById("listaBonusPendentes").innerHTML = bonusPendentesOuParciais.map(b => {
+      document.getElementById("listaBonusPendentes").innerHTML = bonusEmAberto.map(b => {
         const ofertado = Number(b.Bonus_Ofertado || 0);
         const pago = Number(b.Bonus_Pago || 0);
         const falta = Math.max(0, ofertado - pago);
@@ -1532,12 +1409,22 @@
         `;
       }).join("") || `<div style="font-size:0.8rem; color:var(--text-secondary);">Todos os bônus estão integralmente quitados.</div>`;
 
-      // Notas Semanais
+      // Soma das Indicações (Pagas vs A Receber)
+      let indPagas = 0;
+      let indAReceber = 0;
+      db.indicacoes.forEach(ind => {
+        if (ind.Parcela_1_Inicio === "Pago") indPagas += 125;
+        else if (ind.Data_Nota_1) indAReceber += 125;
+
+        if (ind.Parcela_2_30Dias === "Pago") indPagas += 125;
+        else if (ind.Data_Nota_2) indAReceber += 125;
+      });
+
       const somaNotasPagas = db.notas.filter(n => n.Status === "Pago").reduce((a, n) => a + Number(n.Valor_Bruto), 0);
       const somaNotasAReceber = db.notas.filter(n => n.Status !== "Pago").reduce((a, n) => a + Number(n.Valor_Bruto), 0);
 
-      document.getElementById("finTotalPago").textContent = formatBRL(somaNotasPagas);
-      document.getElementById("finTotalAReceber").textContent = formatBRL(somaNotasAReceber + somaRestanteBonus);
+      document.getElementById("finTotalPago").textContent = formatBRL(somaNotasPagas + indPagas);
+      document.getElementById("finTotalAReceber").textContent = formatBRL(somaNotasAReceber + somaRestanteBonus + indAReceber);
 
       document.getElementById("listaNotasSemanais").innerHTML = db.notas.slice().reverse().map(n => `
         <div class="data-row">
@@ -1553,37 +1440,61 @@
             ${n.Status}
           </button>
         </div>
-      `).join("");
+      `).join("") || `<div style="font-size:0.8rem; color:var(--text-secondary);">Nenhuma nota registrada na planilha.</div>`;
 
-      // Indicações
+      // Renderização das Indicações com seletor de Data da Nota
       document.getElementById("listaIndicacoesContainer").innerHTML = db.indicacoes.map(ind => {
         const faltam = (ind.Parcela_1_Inicio === "Pago" ? 0 : 1) + (ind.Parcela_2_30Dias === "Pago" ? 0 : 1);
+        const ciclo1 = ind.Data_Nota_1 ? `Ciclo ${calcularCicloSemanal(ind.Data_Nota_1)}` : "Sem nota emitida";
+        const ciclo2 = ind.Data_Nota_2 ? `Ciclo ${calcularCicloSemanal(ind.Data_Nota_2)}` : "Sem nota emitida";
+
         return `
-          <div class="data-row" style="flex-direction:column; align-items:stretch;">
+          <div class="data-row" style="flex-direction:column; align-items:stretch; gap:12px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <div>
-                <div style="font-weight:700; font-size:0.92rem;">${ind.Nome_Indicado}</div>
+                <div style="font-weight:700; font-size:0.94rem;">${ind.Nome_Indicado}</div>
                 <div style="font-size:0.74rem; color:var(--text-secondary); margin-top:2px;">
                   Início: ${String(ind.Data_Inicio).split("-").reverse().join("/")} · 30 dias: <b>${String(ind.Data_30_Dias).split("-").reverse().join("/")}</b>
                 </div>
               </div>
-              <span class="status-pill ${faltam === 0 ? 'pill-positive' : 'pill-warning'}">
-                ${faltam === 0 ? '2/2 Pagas' : `Falta ${faltam} parc.`}
-              </span>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="status-pill ${faltam === 0 ? 'pill-positive' : 'pill-warning'}">
+                  ${faltam === 0 ? '2/2 Pagas' : `Falta ${faltam} parc.`}
+                </span>
+                <button class="btn-danger-ghost" onclick="excluirIndicacao('${ind.ID}')">Remover</button>
+              </div>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px;">
-              <button class="btn-ghost" style="justify-content:space-between;" onclick="alternarParcelaIndicacao('${ind.ID}', 1)">
-                <span>1ª Parc. (Ativação)</span>
-                <b style="font-family:var(--font-mono); color:${ind.Parcela_1_Inicio === 'Pago' ? 'var(--status-positive)' : 'var(--status-warning)'}">${ind.Parcela_1_Inicio}</b>
-              </button>
-              <button class="btn-ghost" style="justify-content:space-between;" onclick="alternarParcelaIndicacao('${ind.ID}', 2)">
-                <span>2ª Parc. (30 Dias)</span>
-                <b style="font-family:var(--font-mono); color:${ind.Parcela_2_30Dias === 'Pago' ? 'var(--status-positive)' : 'var(--status-warning)'}">${ind.Parcela_2_30Dias}</b>
-              </button>
+
+            <!-- Parcela 1 -->
+            <div style="padding:10px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid var(--divider);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-size:0.78rem; font-weight:600;">1ª Nota — Ativação (R$ 125,00)</span>
+                <button class="status-pill ${ind.Parcela_1_Inicio === 'Pago' ? 'pill-positive' : 'pill-warning'}" style="border:none; cursor:pointer;" onclick="atualizarParcelaIndicacao('${ind.ID}', 1, 'status')">
+                  ${ind.Parcela_1_Inicio || 'Pendente'}
+                </button>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                <span style="font-size:0.72rem; color:var(--text-secondary);">Data envio nota (${ciclo1}):</span>
+                <input type="date" class="input-field input-mono" style="padding:5px 8px; font-size:0.76rem;" value="${ind.Data_Nota_1 || ''}" onchange="atualizarParcelaIndicacao('${ind.ID}', 1, 'data', this.value)" />
+              </div>
+            </div>
+
+            <!-- Parcela 2 -->
+            <div style="padding:10px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid var(--divider);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-size:0.78rem; font-weight:600;">2ª Nota — 30 Dias (R$ 125,00)</span>
+                <button class="status-pill ${ind.Parcela_2_30Dias === 'Pago' ? 'pill-positive' : 'pill-warning'}" style="border:none; cursor:pointer;" onclick="atualizarParcelaIndicacao('${ind.ID}', 2, 'status')">
+                  ${ind.Parcela_2_30Dias || 'Pendente'}
+                </button>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                <span style="font-size:0.72rem; color:var(--text-secondary);">Data envio nota (${ciclo2}):</span>
+                <input type="date" class="input-field input-mono" style="padding:5px 8px; font-size:0.76rem;" value="${ind.Data_Nota_2 || ''}" onchange="atualizarParcelaIndicacao('${ind.ID}', 2, 'data', this.value)" />
+              </div>
             </div>
           </div>
         `;
-      }).join("");
+      }).join("") || `<div style="font-size:0.82rem; color:var(--text-secondary);">Nenhuma indicação cadastrada na planilha.</div>`;
 
       // Histórico Diário
       document.getElementById("listaHistoricoDiario").innerHTML = db.entregas.slice().reverse().map(d => `
@@ -1614,56 +1525,46 @@
       recalcularDia();
     }
 
-    async function enviarPostPlanilha(payload) {
-      const url = db.config.scriptUrl || DEFAULT_SCRIPT_URL;
-      try {
-        document.getElementById("syncStatusText").textContent = "Sincronizando alteração com a planilha...";
-        await fetch(url, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(payload)
-        });
-        document.getElementById("syncStatusText").textContent = "Sincronizado com Google Sheets";
-      } catch (e) {
-        document.getElementById("syncStatusText").textContent = "Operando em cache local";
-      }
-    }
-
+    // ESPELHAMENTO FIEL DA PLANILHA (REFLETE EXCLUSÕES E EDIÇÕES FEITAS NO SHEETS)
     async function sincronizarPlanilha(silencioso = false) {
       const url = db.config.scriptUrl || DEFAULT_SCRIPT_URL;
       try {
-        document.getElementById("syncStatusText").textContent = "Consultando Google Sheets...";
-        const res = await fetch(url);
+        document.getElementById("syncStatusText").textContent = "Sincronizando com Google Sheets...";
+        const res = await fetch(`${url}?t=${Date.now()}`);
         const json = await res.json();
         if (json.status === "ok" && json.data) {
-          // Filtra o dia 13/11 caso ainda esteja antigo na planilha sem lançamento novo
-          if (json.data.entregas?.length) {
-            db.entregas = json.data.entregas.map(d => ({
-              ...d,
-              Bonus_Pago: typeof d.Bonus_Pago !== "undefined"
-                ? Number(d.Bonus_Pago)
-                : (d.Data === "2026-10-24" ? 0 : (d.Data === "2026-10-27" ? 30 : (d.Bonus_Status === "Pago" ? Number(d.Bonus_Ofertado || 0) : 0)))
-            }));
-          }
-          if (json.data.notas?.length) db.notas = json.data.notas;
-          if (json.data.indicacoes?.length) db.indicacoes = json.data.indicacoes;
+          db.entregas = (json.data.entregas || []).map(d => ({
+            ...d,
+            Bonus_Pago: typeof d.Bonus_Pago !== "undefined" && d.Bonus_Pago !== ""
+              ? Number(d.Bonus_Pago)
+              : (d.Bonus_Status === "Pago" ? Number(d.Bonus_Ofertado || 0) : 0)
+          }));
+          db.devolucoes = json.data.devolucoes || [];
+          db.notas = json.data.notas || [];
+          db.indicacoes = json.data.indicacoes || [];
+
           salvarLocal();
           carregarDiaSelecionado();
           atualizarTelas();
           document.getElementById("syncStatusText").textContent = "Sincronizado com Google Sheets";
         }
       } catch (e) {
-        document.getElementById("syncStatusText").textContent = "Logística, Auditoria, Saldo, TBRs e Recebíveis";
+        document.getElementById("syncStatusText").textContent = "Modo Offline (Cache Local)";
         if (!silencioso) alert("Não foi possível conectar à planilha no momento.");
       }
     }
+
+    // Sincroniza ao abrir e sempre que voltar para a aba do navegador
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") sincronizarPlanilha(true);
+    });
 
     window.addEventListener("DOMContentLoaded", () => {
       document.getElementById("inputScriptUrl").value = db.config.scriptUrl || DEFAULT_SCRIPT_URL;
       aplicarTemaDOM(db.config.themePref || "auto");
       carregarDiaSelecionado();
       atualizarTelas();
+      sincronizarPlanilha(true);
     });
   </script>
 </body>
