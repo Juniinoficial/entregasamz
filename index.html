@@ -43,6 +43,8 @@
       --status-warning-bg: rgba(245, 158, 11, 0.12);
       --status-danger: #f43f5e;
       --status-danger-bg: rgba(244, 63, 94, 0.12);
+      --status-info: #38bdf8;
+      --status-info-bg: rgba(56, 189, 248, 0.12);
     }
 
     [data-theme="light"] {
@@ -70,6 +72,8 @@
       --status-warning-bg: rgba(217, 119, 6, 0.10);
       --status-danger: #e11d48;
       --status-danger-bg: rgba(225, 29, 72, 0.10);
+      --status-info: #0284c7;
+      --status-info-bg: rgba(2, 132, 199, 0.10);
     }
 
     * {
@@ -256,12 +260,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
       margin-bottom: 18px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--divider);
       gap: 10px;
     }
-    .panel-title { font-size: 0.95rem; font-weight: 600; letter-spacing: -0.01em; }
+    .panel-title { font-size: 0.95rem; font-weight: 600; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
 
     .control-row {
       display: flex;
@@ -394,6 +399,60 @@
     .pill-positive { background: var(--status-positive-bg); color: var(--status-positive); }
     .pill-warning { background: var(--status-warning-bg); color: var(--status-warning); }
     .pill-danger { background: var(--status-danger-bg); color: var(--status-danger); }
+    .pill-info { background: var(--status-info-bg); color: var(--status-info); }
+
+    /* Feedback Discreto do Leitor TBR */
+    .scan-feedback-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-bottom: 10px;
+      border: 1px solid var(--divider);
+      background: var(--input-bg);
+      color: var(--text-secondary);
+      transition: all 0.25s var(--ease-spring);
+    }
+    .scan-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .scan-feedback-bar.scanning {
+      border-color: var(--status-info);
+      background: var(--status-info-bg);
+      color: var(--status-info);
+    }
+    .scan-feedback-bar.scanning .scan-dot {
+      background: var(--status-info);
+      animation: pulseDot 1.2s infinite ease-in-out;
+    }
+    .scan-feedback-bar.success {
+      border-color: var(--status-positive);
+      background: var(--status-positive-bg);
+      color: var(--status-positive);
+    }
+    .scan-feedback-bar.success .scan-dot {
+      background: var(--status-positive);
+    }
+    .scan-feedback-bar.warning {
+      border-color: var(--status-warning);
+      background: var(--status-warning-bg);
+      color: var(--status-warning);
+    }
+    .scan-feedback-bar.warning .scan-dot {
+      background: var(--status-warning);
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.45); opacity: 0.45; }
+    }
 
     .data-row {
       padding: 14px;
@@ -464,7 +523,7 @@
       justify-content: center;
       padding: 16px;
     }
-    .modal-overlay.open { display: flex; }
+    .modal-overlay.open { display: flex; animation: viewEnter 0.28s var(--ease-spring); }
     .modal-card {
       width: 100%;
       max-width: 440px;
@@ -554,7 +613,7 @@
       <div class="kpi-row">
         <div class="kpi-tile lg-surface">
           <div class="kpi-meta">
-            <span>Faturamento do Dia (Bruto)</span>
+            <span id="labelKpiDiaTitulo">Faturamento do Dia (Bruto)</span>
             <span class="status-pill pill-positive" id="tagTarifaAtiva">R$ 2,31/un</span>
           </div>
           <div class="kpi-number" id="kpiGanhoHojeBruto">R$ 0,00</div>
@@ -564,7 +623,7 @@
         <div class="kpi-tile lg-surface">
           <div class="kpi-meta">
             <span>Acumulado Ciclo Atual</span>
-            <span id="labelCicloAtualHeader">08/11 a 14/11</span>
+            <span id="labelCicloAtualHeader">--/-- a --/--</span>
           </div>
           <div class="kpi-number" id="kpiSemanaBruto">R$ 0,00</div>
           <div class="kpi-foot" id="kpiSemanaPct">0 pacotes entregues</div>
@@ -585,8 +644,14 @@
       <div class="bento-grid bento-grid-hoje">
         <div class="panel lg-surface">
           <div class="panel-header">
-            <span class="panel-title">Fechamento Operacional Diário</span>
-            <input type="date" id="inputDataDia" class="input-field input-mono" value="2026-11-13" onchange="carregarDiaSelecionado()" />
+            <div class="panel-title">
+              <span>Fechamento Operacional</span>
+              <span class="status-pill pill-warning" id="badgeEditandoPassado" style="display:none;">Editando Data Anterior</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <button class="btn-ghost" id="btnIrParaHoje" style="display:none; padding:6px 10px; font-size:0.74rem;" onclick="irParaDataHoje()">Ir para Hoje</button>
+              <input type="date" id="inputDataDia" class="input-field input-mono" onchange="aoMudarDataManualmente()" />
+            </div>
           </div>
 
           <div class="control-row">
@@ -706,9 +771,9 @@
           <div class="kpi-foot">Abatimento parcial disponível por lançamento</div>
         </div>
         <div class="kpi-tile lg-surface">
-          <div class="kpi-meta"><span>Total Liquidado (Declarações PDF)</span></div>
+          <div class="kpi-meta"><span>Total Liquidado (Notas + Indicações)</span></div>
           <div class="kpi-number" id="finTotalPago" style="color:var(--status-positive)">R$ 0,00</div>
-          <div class="kpi-foot">Notas fiscais + indicações quitadas</div>
+          <div class="kpi-foot">Declarações de lucro e indicações pagas</div>
         </div>
       </div>
 
@@ -740,7 +805,7 @@
           <button class="btn-ghost" onclick="adicionarIndicacaoPrompt()">+ Novo Indicado</button>
         </div>
         <p style="font-size:0.78rem; color:var(--text-secondary); margin-bottom:16px;">
-          Informe a data em que a nota fiscal de cada parcela (R$ 125,00) foi emitida. O valor será somado automaticamente ao cálculo da respectiva semana.
+          Ao marcar uma parcela (R$ 125,00) como <b>Pago</b> ou definir a data da nota, o valor entra automaticamente no cálculo total da respectiva semana.
         </p>
         <div id="listaIndicacoesContainer" class="bento-grid bento-grid-2col"></div>
       </div>
@@ -786,6 +851,30 @@
     </section>
   </div>
 
+  <!-- MODAL DE ALERTA: DIA ANTERIOR SEM INFORMAÇÃO -->
+  <div class="modal-overlay" id="modalPendenciaOntem">
+    <div class="modal-card lg-surface">
+      <div class="panel-header">
+        <span class="panel-title">Fechamento do Dia Anterior Pendente</span>
+        <span class="status-pill pill-warning" id="tagDataOntemModal">--/--/----</span>
+      </div>
+      <p style="font-size:0.83rem; color:var(--text-secondary); line-height:1.5; margin-bottom:18px;">
+        Não encontramos nenhum registro de entregas ou de folga para ontem (<b id="textoDataOntemModal" style="color:var(--text-primary);">--/--</b>). Deseja informar os dados do dia anterior antes de iniciar o lançamento de hoje?
+      </p>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <button class="btn-exec" style="margin-top:0;" onclick="selecionarPreencherOntem()">
+          Informar Dia Anterior Agora
+        </button>
+        <button class="btn-ghost" style="width:100%; justify-content:center; padding:11px;" onclick="registrarOntemComoFolgaRapida()">
+          Marcar Ontem como Folga e Continuar em Hoje
+        </button>
+        <button class="btn-ghost" style="width:100%; justify-content:center; padding:11px; color:var(--text-secondary);" onclick="ignorarPendenciaOntem()">
+          Ir Direto para o Dia de Hoje
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL DE CAPTURA TBR -->
   <div class="modal-overlay" id="modalTBR">
     <div class="modal-card lg-surface">
@@ -793,19 +882,32 @@
         <span class="panel-title">Registrar Pacote para Devolução</span>
         <button class="btn-ghost" onclick="fecharModalTBR()">Fechar</button>
       </div>
+
+      <!-- Container da Câmera e Leitor oculto de arquivo -->
       <div id="reader"></div>
+      <div id="fileScannerTemp" style="display:none;"></div>
+
+      <!-- Barra de Status Discreta do Leitor TBR -->
+      <div id="tbrScanStatus" class="scan-feedback-bar">
+        <span class="scan-dot"></span>
+        <span id="tbrScanStatusText">Use o leitor ao vivo ou fotografe a etiqueta para extrair o TBR.</span>
+      </div>
+
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
-        <button class="btn-ghost" style="justify-content:center;" onclick="iniciarLeitorCodigo()">Ler Código de Barras</button>
+        <button class="btn-ghost" id="btnToggleScanner" style="justify-content:center;" onclick="iniciarLeitorCodigo()">Ler Código de Barras</button>
         <label class="btn-ghost" style="justify-content:center; cursor:pointer;">
           Fotografar Etiqueta
           <input type="file" accept="image/*" capture="environment" style="display:none" onchange="capturarFotoPacote(event)" />
         </label>
       </div>
+
       <img id="imgPreviewTBR" class="preview-img" alt="Evidência TBR" />
+
       <div style="margin-top:12px;">
         <label style="font-size:0.74rem; color:var(--text-secondary);">Código TBR (Padrão TBR + 9 a 11 dígitos)</label>
-        <input type="text" id="inputCodigoTBR" class="input-field input-mono" style="width:100%; margin-top:5px; text-transform:uppercase;" placeholder="TBR000000000" value="TBR" />
+        <input type="text" id="inputCodigoTBR" class="input-field input-mono" style="width:100%; margin-top:5px; text-transform:uppercase;" placeholder="TBR000000000" value="TBR" oninput="validarInputManualTBR(this.value)" />
       </div>
+
       <div style="margin-top:12px;">
         <label style="font-size:0.74rem; color:var(--text-secondary);">Classificação da Ocorrência</label>
         <select id="selectMotivoTBR" class="input-field" style="width:100%; margin-top:5px;">
@@ -813,10 +915,12 @@
           <option value="Danificado">Avaria / Danificado</option>
         </select>
       </div>
+
       <div style="margin-top:12px;">
         <label style="font-size:0.74rem; color:var(--text-secondary);">Identificação Auxiliar (Driver Aid / Endereço)</label>
         <input type="text" id="inputObsTBR" class="input-field" style="width:100%; margin-top:5px;" placeholder="Ex: Etiqueta amarela 034" />
       </div>
+
       <button class="btn-exec" onclick="confirmarRegistroTBR()">Confirmar Inclusão de TBR</button>
     </div>
   </div>
@@ -838,7 +942,7 @@
       </div>
       <div style="margin-bottom:12px;">
         <label style="font-size:0.74rem; color:var(--text-secondary);">Data da Coleta</label>
-        <input type="date" id="inputDataBaixa" class="input-field input-mono" style="width:100%; margin-top:5px;" value="2026-11-13" />
+        <input type="date" id="inputDataBaixa" class="input-field input-mono" style="width:100%; margin-top:5px;" />
       </div>
       <button class="btn-exec" onclick="confirmarBaixaMotorista()">Registrar Baixa de Custódia</button>
     </div>
@@ -870,14 +974,41 @@
 
   <script>
     const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbySoITRQ5YHnR0MPjfZiJ4pqFJIrKwoPCPkxuIbVbr6cYSQrgD0M4vTYKDDjfTELW9V/exec";
-    const STORAGE_KEY = "lastro_db_v4";
+    const STORAGE_KEY = "lastro_db_v6";
 
-    // Calcula automaticamente o ciclo Domingo a Sábado de qualquer data YYYY-MM-DD
+    function obterDataLocalISO(offsetDias = 0) {
+      const dt = new Date();
+      dt.setDate(dt.getDate() + offsetDias);
+      const ano = dt.getFullYear();
+      const mes = String(dt.getMonth() + 1).padStart(2, "0");
+      const dia = String(dt.getDate()).padStart(2, "0");
+      return `${ano}-${mes}-${dia}`;
+    }
+
+    function normalizarDataISO(valor) {
+      if (!valor) return "";
+      const str = String(valor).trim();
+      if (/^\d{4}-\d{2}-\d{2}/.test(str)) return str.slice(0, 10);
+      if (/^\d{2}\/\d{2}\/\d{4}/.test(str)) {
+        const [d, m, y] = str.slice(0, 10).split("/");
+        return `${y}-${m}-${d}`;
+      }
+      return str.slice(0, 10);
+    }
+
+    function formatarDataBR(dataISO) {
+      const limpo = normalizarDataISO(dataISO);
+      if (!limpo) return "--/--/----";
+      return limpo.split("-").reverse().join("/");
+    }
+
     function calcularCicloSemanal(dataStr) {
-      if (!dataStr) return "08/11 a 14/11";
-      const [ano, mes, dia] = dataStr.split("-").map(Number);
+      const base = normalizarDataISO(dataStr) || obterDataLocalISO(0);
+      const partes = base.split("-").map(Number);
+      if (partes.length < 3 || isNaN(partes[0])) return "";
+      const [ano, mes, dia] = partes;
       const dt = new Date(ano, mes - 1, dia, 12, 0, 0);
-      const dow = dt.getDay(); // 0 = Domingo ... 6 = Sábado
+      const dow = dt.getDay();
       const dom = new Date(dt);
       dom.setDate(dt.getDate() - dow);
       const sab = new Date(dom);
@@ -906,6 +1037,9 @@
 
     let fotoBase64Atual = "";
     let html5QrCode = null;
+    let scannerAtivo = false;
+    let preenchendoOntemPeloAlerta = false;
+    let ultimoDiaChecadoNoRelogio = obterDataLocalISO(0);
 
     document.addEventListener("pointermove", (e) => {
       document.querySelectorAll(".lg-surface").forEach(card => {
@@ -951,6 +1085,91 @@
       atualizarTelas();
     }
 
+    function irParaDataHoje() {
+      preenchendoOntemPeloAlerta = false;
+      document.getElementById("inputDataDia").value = obterDataLocalISO(0);
+      carregarDiaSelecionado();
+    }
+
+    function aoMudarDataManualmente() {
+      preenchendoOntemPeloAlerta = false;
+      carregarDiaSelecionado();
+    }
+
+    function verificarPendenciaDiaAnterior() {
+      const ontemISO = obterDataLocalISO(-1);
+      const chaveSessao = `lastro_verificou_ontem_${ontemISO}`;
+      if (sessionStorage.getItem(chaveSessao) === "1") return;
+
+      const regOntem = db.entregas.find(d => normalizarDataISO(d.Data) === ontemISO);
+      const temInformacaoOntem = regOntem && (
+        Number(regOntem.Entregues_Normal || 0) > 0 ||
+        Number(regOntem.Resgate_Qtd || 0) > 0 ||
+        Number(regOntem.Bonus_Ofertado || 0) > 0 ||
+        Boolean(regOntem.Folga) === true
+      );
+
+      if (!temInformacaoOntem) {
+        document.getElementById("tagDataOntemModal").textContent = formatarDataBR(ontemISO);
+        document.getElementById("textoDataOntemModal").textContent = formatarDataBR(ontemISO);
+        document.getElementById("modalPendenciaOntem").classList.add("open");
+      } else {
+        sessionStorage.setItem(chaveSessao, "1");
+      }
+    }
+
+    function selecionarPreencherOntem() {
+      const ontemISO = obterDataLocalISO(-1);
+      sessionStorage.setItem(`lastro_verificou_ontem_${ontemISO}`, "1");
+      preenchendoOntemPeloAlerta = true;
+      document.getElementById("modalPendenciaOntem").classList.remove("open");
+      document.getElementById("inputDataDia").value = ontemISO;
+      carregarDiaSelecionado();
+      document.getElementById("inputEntregues").focus();
+    }
+
+    async function registrarOntemComoFolgaRapida() {
+      const ontemISO = obterDataLocalISO(-1);
+      sessionStorage.setItem(`lastro_verificou_ontem_${ontemISO}`, "1");
+      document.getElementById("modalPendenciaOntem").classList.remove("open");
+
+      const itemFolgaOntem = {
+        Data: ontemISO,
+        Semana_Ciclo: calcularCicloSemanal(ontemISO),
+        Entregues_Normal: 0,
+        Tentar_Novamente: 0,
+        Fora_De_Rota: 0,
+        Danificados: 0,
+        Resgate_Qtd: 0,
+        Resgate_Origem: "",
+        Resgate_Valor_Bruto: 0,
+        Bonus_Ofertado: 0,
+        Bonus_Pago: 0,
+        Bonus_Status: "-",
+        Valor_Bruto_Dia: 0,
+        Valor_Liquido_Dia: 0,
+        Folga: true,
+        Observacoes: "Folga registrada via assistente diário"
+      };
+
+      const idx = db.entregas.findIndex(d => normalizarDataISO(d.Data) === ontemISO);
+      if (idx >= 0) db.entregas[idx] = itemFolgaOntem;
+      else db.entregas.push(itemFolgaOntem);
+
+      document.getElementById("inputDataDia").value = obterDataLocalISO(0);
+      salvarLocal();
+      carregarDiaSelecionado();
+      await enviarESincronizar({ action: "salvarDia", item: itemFolgaOntem });
+    }
+
+    function ignorarPendenciaOntem() {
+      const ontemISO = obterDataLocalISO(-1);
+      sessionStorage.setItem(`lastro_verificou_ontem_${ontemISO}`, "1");
+      document.getElementById("modalPendenciaOntem").classList.remove("open");
+      document.getElementById("inputDataDia").value = obterDataLocalISO(0);
+      carregarDiaSelecionado();
+    }
+
     function ajustarValor(idInput, delta) {
       const el = document.getElementById(idInput);
       const novo = Math.max(0, (parseInt(el.value, 10) || 0) + delta);
@@ -959,9 +1178,20 @@
     }
 
     function carregarDiaSelecionado() {
-      const dataSel = document.getElementById("inputDataDia").value;
-      const reg = db.entregas.find(d => d.Data === dataSel);
-      const tbrsDia = db.devolucoes.filter(t => t.Data_Recebimento === dataSel);
+      const hojeISO = obterDataLocalISO(0);
+      const dataSel = normalizarDataISO(document.getElementById("inputDataDia").value) || hojeISO;
+      const reg = db.entregas.find(d => normalizarDataISO(d.Data) === dataSel);
+      const tbrsDia = db.devolucoes.filter(t => normalizarDataISO(t.Data_Recebimento) === dataSel);
+
+      const ehHoje = dataSel === hojeISO;
+      document.getElementById("badgeEditandoPassado").style.display = ehHoje ? "none" : "inline-flex";
+      document.getElementById("badgeEditandoPassado").textContent = dataSel === obterDataLocalISO(-1)
+        ? `Preenchendo Ontem (${formatarDataBR(dataSel)})`
+        : `Editando ${formatarDataBR(dataSel)}`;
+      document.getElementById("btnIrParaHoje").style.display = ehHoje ? "none" : "inline-flex";
+      document.getElementById("labelKpiDiaTitulo").textContent = ehHoje
+        ? "Faturamento de Hoje (Bruto)"
+        : `Faturamento ${formatarDataBR(dataSel)} (Bruto)`;
 
       document.getElementById("badgeTotalDevolucoesDia").textContent = `${tbrsDia.length} TBRs`;
       document.getElementById("labelCicloAtualHeader").textContent = calcularCicloSemanal(dataSel);
@@ -988,7 +1218,7 @@
     }
 
     function recalcularDia(atualizarValorResgatePadrao = false) {
-      const dataSel = document.getElementById("inputDataDia").value;
+      const dataSel = normalizarDataISO(document.getElementById("inputDataDia").value);
       const tarifaBruta = parseFloat(db.config.tarifaBruta) || 2.31;
       const tarifaLiq = parseFloat(db.config.tarifaLiquida) || 2.15;
 
@@ -1003,7 +1233,7 @@
       }
 
       const resgateVal = parseFloat(document.getElementById("inputResgateValor").value) || 0;
-      const tbrsDia = db.devolucoes.filter(t => t.Data_Recebimento === dataSel).length;
+      const tbrsDia = db.devolucoes.filter(t => normalizarDataISO(t.Data_Recebimento) === dataSel).length;
 
       const ganhoBruto = (entregues * tarifaBruta) + resgateVal;
       const ganhoLiq = ((entregues + resgateQtd) * tarifaLiq);
@@ -1023,7 +1253,6 @@
       barEl.style.backgroundColor = cor;
     }
 
-    // ENVIA PARA A PLANILHA E PUXA OS DADOS ATUALIZADOS AUTOMATICAMENTE
     async function enviarESincronizar(payload, botaoOpcional = null) {
       const url = db.config.scriptUrl || DEFAULT_SCRIPT_URL;
       if (botaoOpcional) botaoOpcional.disabled = true;
@@ -1035,9 +1264,8 @@
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(payload)
         });
-        // Aguarda o Google Sheets concluir a escrita e puxa o estado atualizado
         await new Promise(r => setTimeout(r, 900));
-        await sincronizarPlanilha(true);
+        await sincronizarPlanilha(true, false);
       } catch (e) {
         document.getElementById("syncStatusText").textContent = "Salvo localmente (offline)";
       } finally {
@@ -1047,7 +1275,7 @@
 
     async function salvarLancamentoDia() {
       const btn = document.getElementById("btnSalvarDia");
-      const dataSel = document.getElementById("inputDataDia").value;
+      const dataSel = normalizarDataISO(document.getElementById("inputDataDia").value);
       const ciclo = calcularCicloSemanal(dataSel);
       const tarifaBruta = parseFloat(db.config.tarifaBruta) || 2.31;
       const tarifaLiq = parseFloat(db.config.tarifaLiquida) || 2.15;
@@ -1060,11 +1288,11 @@
       const bonusDia = parseFloat(document.getElementById("inputBonusDia").value) || 0;
       const folga = document.getElementById("checkFolga").checked;
 
-      const tbrsDia = db.devolucoes.filter(t => t.Data_Recebimento === dataSel);
+      const tbrsDia = db.devolucoes.filter(t => normalizarDataISO(t.Data_Recebimento) === dataSel);
       const foraRota = tbrsDia.filter(t => t.Motivo === "Fora de Rota").length;
       const danificados = tbrsDia.filter(t => t.Motivo === "Danificado").length;
 
-      const existente = db.entregas.find(d => d.Data === dataSel);
+      const existente = db.entregas.find(d => normalizarDataISO(d.Data) === dataSel);
       const bonusJaPago = existente ? (Number(existente.Bonus_Pago) || 0) : 0;
 
       const novoItem = {
@@ -1085,17 +1313,23 @@
         Folga: folga
       };
 
-      const idx = db.entregas.findIndex(d => d.Data === dataSel);
+      const idx = db.entregas.findIndex(d => normalizarDataISO(d.Data) === dataSel);
       if (idx >= 0) db.entregas[idx] = novoItem;
       else db.entregas.push(novoItem);
 
       salvarLocal();
       atualizarTelas();
       await enviarESincronizar({ action: "salvarDia", item: novoItem }, btn);
+
+      if (preenchendoOntemPeloAlerta || dataSel === obterDataLocalISO(-1)) {
+        preenchendoOntemPeloAlerta = false;
+        document.getElementById("inputDataDia").value = obterDataLocalISO(0);
+        carregarDiaSelecionado();
+      }
     }
 
     async function atualizarValorBonusPago(dataDia, valorDigitado) {
-      const reg = db.entregas.find(d => d.Data === dataDia);
+      const reg = db.entregas.find(d => normalizarDataISO(d.Data) === normalizarDataISO(dataDia));
       if (!reg) return;
       const ofertado = Number(reg.Bonus_Ofertado || 0);
       const pago = Math.min(ofertado, Math.max(0, parseFloat(valorDigitado) || 0));
@@ -1107,56 +1341,190 @@
       await enviarESincronizar({ action: "salvarDia", item: reg });
     }
 
-    // GESTÃO DE TBRs
+    // =========================================================================
+    // MOTOR DE LEITURA TBR (CÂMERA AO VIVO + EXTRAÇÃO POR FOTO + FEEDBACK SUTIL)
+    // =========================================================================
+    function atualizarStatusScanner(tipo, mensagem) {
+      const bar = document.getElementById("tbrScanStatus");
+      const txt = document.getElementById("tbrScanStatusText");
+      bar.className = "scan-feedback-bar" + (tipo ? ` ${tipo}` : "");
+      txt.textContent = mensagem;
+    }
+
+    function extrairCodigoTbrDeTexto(textoBruto) {
+      if (!textoBruto) return null;
+      const limpo = String(textoBruto).toUpperCase().replace(/\s+/g, "");
+      const matchTbr = limpo.match(/TBR\d{9,11}/);
+      if (matchTbr) return matchTbr[0];
+      // Caso o código de barras retorne apenas os 9 a 11 dígitos numéricos do TBR
+      if (/^\d{9,11}$/.test(limpo)) return "TBR" + limpo;
+      return null;
+    }
+
+    function validarInputManualTBR(valor) {
+      const tbrExtraido = extrairCodigoTbrDeTexto(valor);
+      if (tbrExtraido) {
+        atualizarStatusScanner("success", `TBR válido identificado: ${tbrExtraido}`);
+      } else if (valor.trim().length > 3) {
+        atualizarStatusScanner("warning", "Aguardando de 9 a 11 dígitos após o prefixo TBR...");
+      }
+    }
+
     function abrirModalTBR() {
       document.getElementById("modalTBR").classList.add("open");
       document.getElementById("inputCodigoTBR").value = "TBR";
+      document.getElementById("inputObsTBR").value = "";
       document.getElementById("imgPreviewTBR").style.display = "none";
+      document.getElementById("btnToggleScanner").textContent = "Ler Código de Barras";
       fotoBase64Atual = "";
+      atualizarStatusScanner("", "Toque em 'Ler Código de Barras' ou fotografe a etiqueta.");
+    }
+
+    async function pararScannerCamera() {
+      if (html5QrCode && scannerAtivo) {
+        try {
+          await html5QrCode.stop();
+          html5QrCode.clear();
+        } catch (e) {}
+      }
+      scannerAtivo = false;
+      const btn = document.getElementById("btnToggleScanner");
+      if (btn) btn.textContent = "Ler Código de Barras";
     }
 
     function fecharModalTBR() {
-      if (html5QrCode) {
-        html5QrCode.stop().catch(() => {});
-        html5QrCode = null;
-      }
+      pararScannerCamera();
       document.getElementById("modalTBR").classList.remove("open");
     }
 
-    function iniciarLeitorCodigo() {
-      html5QrCode = new Html5Qrcode("reader");
-      html5QrCode.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: { width: 250, height: 110 } },
-        (decodedText) => {
-          const match = decodedText.toUpperCase().match(/TBR\d{9,11}/);
-          document.getElementById("inputCodigoTBR").value = match ? match[0] : decodedText.toUpperCase();
-          html5QrCode.stop().catch(() => {});
-        },
-        () => {}
-      ).catch(() => alert("Verifique a permissão de câmera do navegador."));
+    async function iniciarLeitorCodigo() {
+      if (scannerAtivo) {
+        await pararScannerCamera();
+        atualizarStatusScanner("", "Leitor pausado. Você pode digitar ou fotografar a etiqueta.");
+        return;
+      }
+
+      try {
+        atualizarStatusScanner("scanning", "Iniciando câmera... aponte para as barras acima do número TBR.");
+        document.getElementById("btnToggleScanner").textContent = "Pausar Câmera";
+
+        const formatos = window.Html5QrcodeSupportedFormats ? [
+          Html5QrcodeSupportedFormats.CODE_128,
+          Html5QrcodeSupportedFormats.CODE_39,
+          Html5QrcodeSupportedFormats.DATA_MATRIX,
+          Html5QrcodeSupportedFormats.QR_CODE
+        ] : undefined;
+
+        html5QrCode = new Html5Qrcode("reader", {
+          formatsToSupport: formatos,
+          experimentalFeatures: { useBarCodeDetectorIfSupported: true },
+          verbose: false
+        });
+
+        scannerAtivo = true;
+
+        await html5QrCode.start(
+          { facingMode: "environment" },
+          {
+            fps: 15,
+            qrbox: (viewfinderWidth, viewfinderHeight) => {
+              const w = Math.floor(viewfinderWidth * 0.86);
+              const h = Math.floor(Math.min(140, viewfinderHeight * 0.45));
+              return { width: w, height: h };
+            },
+            aspectRatio: 1.777
+          },
+          async (decodedText) => {
+            const tbrEncontrado = extrairCodigoTbrDeTexto(decodedText);
+            if (tbrEncontrado) {
+              document.getElementById("inputCodigoTBR").value = tbrEncontrado;
+              if (navigator.vibrate) navigator.vibrate(45);
+              atualizarStatusScanner("success", `TBR lido com sucesso: ${tbrEncontrado}`);
+              await pararScannerCamera();
+            } else {
+              // Ignora códigos secundários (ex: DBS7, QR da etiqueta amarela) sem desligar a câmera!
+              atualizarStatusScanner("warning", "Código secundário ignorado — centralize nas barras acima do TBR.");
+            }
+          },
+          () => {}
+        );
+      } catch (err) {
+        scannerAtivo = false;
+        document.getElementById("btnToggleScanner").textContent = "Ler Código de Barras";
+        atualizarStatusScanner("warning", "Não foi possível abrir o vídeo ao vivo — tire uma foto ou digite o TBR.");
+      }
+    }
+
+    async function tentarExtrairTbrDaImagem(file) {
+      atualizarStatusScanner("scanning", "Analisando foto para ler o código de barras do TBR...");
+
+      // 1. Tenta via API Nativa BarcodeDetector (Chrome / Android / iOS 17+)
+      if ("BarcodeDetector" in window) {
+        try {
+          const bitmap = await createImageBitmap(file);
+          const detector = new BarcodeDetector({
+            formats: ["code_128", "code_39", "data_matrix", "qr_code"]
+          });
+          const barcodes = await detector.detect(bitmap);
+          for (const b of barcodes) {
+            const tbr = extrairCodigoTbrDeTexto(b.rawValue);
+            if (tbr) return tbr;
+          }
+        } catch (e) {}
+      }
+
+      // 2. Fallback via html5-qrcode scanFile
+      try {
+        const tempScanner = new Html5Qrcode("fileScannerTemp");
+        const decoded = await tempScanner.scanFile(file, false);
+        tempScanner.clear();
+        const tbr = extrairCodigoTbrDeTexto(decoded);
+        if (tbr) return tbr;
+      } catch (e) {}
+
+      return null;
     }
 
     function capturarFotoPacote(event) {
       const file = event.target.files[0];
       if (!file) return;
+
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = async function(e) {
         fotoBase64Atual = e.target.result;
         const img = document.getElementById("imgPreviewTBR");
         img.src = fotoBase64Atual;
         img.style.display = "block";
+
+        // Se o campo TBR ainda não tiver um TBR completo, tenta ler da própria foto tirada!
+        const atual = document.getElementById("inputCodigoTBR").value;
+        if (!extrairCodigoTbrDeTexto(atual)) {
+          const tbrDaFoto = await tentarExtrairTbrDaImagem(file);
+          if (tbrDaFoto) {
+            document.getElementById("inputCodigoTBR").value = tbrDaFoto;
+            if (navigator.vibrate) navigator.vibrate(45);
+            atualizarStatusScanner("success", `TBR lido automaticamente da foto: ${tbrDaFoto}`);
+          } else {
+            atualizarStatusScanner("warning", "Foto anexada — não foi possível ler o TBR pela imagem, digite os números abaixo.");
+          }
+        } else {
+          atualizarStatusScanner("success", `Foto anexada ao código ${atual.toUpperCase()}`);
+        }
       };
       reader.readAsDataURL(file);
     }
 
     async function confirmarRegistroTBR() {
-      const codigo = document.getElementById("inputCodigoTBR").value.trim().toUpperCase();
-      if (!/^TBR\d{9,11}$/.test(codigo)) {
-        if (!confirm(`O código "${codigo}" difere do padrão TBR + 9 a 11 dígitos. Registrar mesmo assim?`)) return;
+      const rawInput = document.getElementById("inputCodigoTBR").value.trim().toUpperCase();
+      const codigoExtraido = extrairCodigoTbrDeTexto(rawInput);
+      const codigoFinal = codigoExtraido || rawInput;
+
+      if (!/^TBR\d{9,11}$/.test(codigoFinal)) {
+        atualizarStatusScanner("warning", `Formato fora do padrão (TBR + 9 a 11 dígitos). Confira o código antes de confirmar.`);
+        if (!confirm(`O código "${codigoFinal}" difere do padrão TBR + 9 a 11 dígitos. Registrar mesmo assim?`)) return;
       }
 
-      const dataReceb = document.getElementById("inputDataDia").value;
+      const dataReceb = normalizarDataISO(document.getElementById("inputDataDia").value);
       const motivo = document.getElementById("selectMotivoTBR").value;
       const obs = document.getElementById("inputObsTBR").value;
 
@@ -1165,7 +1533,7 @@
         Mes_Ref: dataReceb.slice(0, 7),
         Semana_Ciclo: calcularCicloSemanal(dataReceb),
         Data_Recebimento: dataReceb,
-        TBR: codigo,
+        TBR: codigoFinal,
         Motivo: motivo,
         Status_Devolucao: "Pendente",
         Data_Devolucao: "",
@@ -1185,6 +1553,7 @@
 
     function abrirModalBaixa(id) {
       document.getElementById("baixaTbrId").value = id;
+      document.getElementById("inputDataBaixa").value = obterDataLocalISO(0);
       document.getElementById("modalBaixaMotorista").classList.add("open");
     }
 
@@ -1195,7 +1564,7 @@
     async function confirmarBaixaMotorista() {
       const id = document.getElementById("baixaTbrId").value;
       const motorista = document.getElementById("inputMotoristaNome").value.trim();
-      const dataDev = document.getElementById("inputDataBaixa").value;
+      const dataDev = normalizarDataISO(document.getElementById("inputDataBaixa").value);
 
       if (!motorista) return alert("Informe o motorista responsável pelo recolhimento.");
 
@@ -1226,10 +1595,10 @@
           <div>
             <div style="font-family:var(--font-mono); font-weight:700; font-size:0.92rem;">${t.TBR}</div>
             <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:3px;">
-              Entrada descontada em <b>${String(t.Data_Recebimento).split("-").reverse().join("/")}</b> · ${t.Motivo}
+              Entrada descontada em <b>${formatarDataBR(t.Data_Recebimento)}</b> · ${t.Motivo}
             </div>
             ${t.Status_Devolucao === "Devolvido"
-              ? `<div style="font-size:0.74rem; color:var(--status-positive); margin-top:3px;">Devolvido em ${String(t.Data_Devolucao).split("-").reverse().join("/")} · Motorista: <b>${t.Motorista_Recebedor}</b></div>`
+              ? `<div style="font-size:0.74rem; color:var(--status-positive); margin-top:3px;">Devolvido em ${formatarDataBR(t.Data_Devolucao)} · Motorista: <b>${t.Motorista_Recebedor}</b></div>`
               : `<div style="font-size:0.74rem; color:var(--status-warning); margin-top:3px;">Em custódia local — aguardando baixa com motorista</div>`
             }
             ${t.Observacoes ? `<div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Ref: ${t.Observacoes}</div>` : ""}
@@ -1250,7 +1619,7 @@
             <div class="data-row">
               <div>
                 <div style="font-family:var(--font-mono); font-weight:700; font-size:0.86rem;">${t.TBR}</div>
-                <div style="font-size:0.72rem; color:var(--text-secondary);">${t.Motivo} · Entrada ${String(t.Data_Recebimento).split("-").reverse().join("/")}</div>
+                <div style="font-size:0.72rem; color:var(--text-secondary);">${t.Motivo} · Entrada ${formatarDataBR(t.Data_Recebimento)}</div>
               </div>
               <button class="btn-ghost" onclick="abrirModalBaixa('${t.ID}')">Baixar</button>
             </div>
@@ -1258,30 +1627,61 @@
         : `<div style="font-size:0.78rem; color:var(--text-secondary);">Zero pacotes pendentes de devolução no momento.</div>`;
     }
 
-    // INDICAÇÕES (COM DATA DA NOTA ENTRANDO NO CÁLCULO DA RESPECTIVA SEMANA)
+    // =========================================================================
+    // CÁLCULO DE INDICAÇÕES NO TOTAL SEMANAL (PAGO OU COM NOTA NA SEMANA)
+    // =========================================================================
+    function obterDataEfetivaParcelaIndicacao(ind, qualParcela) {
+      if (qualParcela === 1) {
+        const dtNota1 = normalizarDataISO(ind.Data_Nota_1);
+        if (dtNota1) return dtNota1;
+        if (ind.Parcela_1_Inicio === "Pago") return normalizarDataISO(ind.Data_Inicio) || obterDataLocalISO(0);
+        return "";
+      } else {
+        const dtNota2 = normalizarDataISO(ind.Data_Nota_2);
+        if (dtNota2) return dtNota2;
+        if (ind.Parcela_2_30Dias === "Pago") return normalizarDataISO(ind.Data_30_Dias) || obterDataLocalISO(0);
+        return "";
+      }
+    }
+
     function calcularIndicacoesPorCiclo(cicloAlvo) {
-      let totalCiclo = 0;
+      let totalPagoOuFaturadoCiclo = 0;
       db.indicacoes.forEach(ind => {
-        if (ind.Data_Nota_1 && calcularCicloSemanal(ind.Data_Nota_1) === cicloAlvo) {
-          totalCiclo += 125;
+        const dt1 = obterDataEfetivaParcelaIndicacao(ind, 1);
+        if (dt1 && calcularCicloSemanal(dt1) === cicloAlvo && (ind.Parcela_1_Inicio === "Pago" || ind.Data_Nota_1)) {
+          totalPagoOuFaturadoCiclo += 125;
         }
-        if (ind.Data_Nota_2 && calcularCicloSemanal(ind.Data_Nota_2) === cicloAlvo) {
-          totalCiclo += 125;
+        const dt2 = obterDataEfetivaParcelaIndicacao(ind, 2);
+        if (dt2 && calcularCicloSemanal(dt2) === cicloAlvo && (ind.Parcela_2_30Dias === "Pago" || ind.Data_Nota_2)) {
+          totalPagoOuFaturadoCiclo += 125;
         }
       });
-      return totalCiclo;
+      return totalPagoOuFaturadoCiclo;
     }
 
     async function atualizarParcelaIndicacao(id, qualParcela, campo, valor) {
       const ind = db.indicacoes.find(i => String(i.ID) === String(id));
       if (!ind) return;
 
+      const dataAtivaApp = normalizarDataISO(document.getElementById("inputDataDia").value) || obterDataLocalISO(0);
+
       if (qualParcela === 1) {
-        if (campo === "status") ind.Parcela_1_Inicio = ind.Parcela_1_Inicio === "Pago" ? "Pendente" : "Pago";
-        if (campo === "data") ind.Data_Nota_1 = valor;
+        if (campo === "status") {
+          ind.Parcela_1_Inicio = ind.Parcela_1_Inicio === "Pago" ? "Pendente" : "Pago";
+          // Se marcou como Pago e ainda não tinha data de nota informada, vincula à data ativa para já entrar na semana
+          if (ind.Parcela_1_Inicio === "Pago" && !normalizarDataISO(ind.Data_Nota_1)) {
+            ind.Data_Nota_1 = dataAtivaApp;
+          }
+        }
+        if (campo === "data") ind.Data_Nota_1 = normalizarDataISO(valor);
       } else {
-        if (campo === "status") ind.Parcela_2_30Dias = ind.Parcela_2_30Dias === "Pago" ? "Pendente" : "Pago";
-        if (campo === "data") ind.Data_Nota_2 = valor;
+        if (campo === "status") {
+          ind.Parcela_2_30Dias = ind.Parcela_2_30Dias === "Pago" ? "Pendente" : "Pago";
+          if (ind.Parcela_2_30Dias === "Pago" && !normalizarDataISO(ind.Data_Nota_2)) {
+            ind.Data_Nota_2 = dataAtivaApp;
+          }
+        }
+        if (campo === "data") ind.Data_Nota_2 = normalizarDataISO(valor);
       }
 
       salvarLocal();
@@ -1292,17 +1692,17 @@
     async function adicionarIndicacaoPrompt() {
       const nome = prompt("Nome do parceiro indicado:");
       if (!nome) return;
-      const dataIni = prompt("Data de início da operação (AAAA-MM-DD):", "2026-11-13");
+      const dataIni = prompt("Data de início da operação (AAAA-MM-DD):", obterDataLocalISO(0));
       if (!dataIni) return;
 
-      const dt30 = new Date(dataIni + "T12:00:00");
+      const dt30 = new Date(normalizarDataISO(dataIni) + "T12:00:00");
       dt30.setDate(dt30.getDate() + 30);
       const data30Str = dt30.toISOString().slice(0, 10);
 
       const nova = {
         ID: "IND-" + Date.now(),
         Nome_Indicado: nome,
-        Data_Inicio: dataIni,
+        Data_Inicio: normalizarDataISO(dataIni),
         Data_30_Dias: data30Str,
         Valor_Total: 250,
         Parcela_1_Inicio: "Pendente",
@@ -1336,28 +1736,31 @@
     function atualizarTelas() {
       renderizarListaTBR();
 
-      const dataSel = document.getElementById("inputDataDia").value;
+      const dataSel = normalizarDataISO(document.getElementById("inputDataDia").value) || obterDataLocalISO(0);
       const cicloAtual = calcularCicloSemanal(dataSel);
 
-      // Soma Entregas + Resgates + Indicações faturadas naquela semana
-      const entregasSemana = db.entregas.filter(d => d.Semana_Ciclo === cicloAtual);
+      // Filtra entregas da semana comparando tanto Semana_Ciclo quanto o cálculo direto da data
+      const entregasSemana = db.entregas.filter(d =>
+        d.Semana_Ciclo === cicloAtual || calcularCicloSemanal(d.Data) === cicloAtual
+      );
+
       const brutoEntregasSemana = entregasSemana.reduce((acc, d) => acc + (Number(d.Valor_Bruto_Dia) || 0), 0);
       const pctSemana = entregasSemana.reduce((acc, d) => acc + (Number(d.Entregues_Normal) || 0) + (Number(d.Resgate_Qtd) || 0), 0);
       const bonusSemana = entregasSemana.reduce((acc, d) => acc + (Number(d.Bonus_Ofertado) || 0), 0);
       const indicacoesSemana = calcularIndicacoesPorCiclo(cicloAtual);
 
-      const totalBrutoSemana = brutoEntregasSemana + indicacoesSemana;
+      // Valor Total da Semana = Entregas + Bônus da Semana + Bônus de Indicação da Semana
+      const totalBrutoSemana = brutoEntregasSemana + bonusSemana + indicacoesSemana;
       document.getElementById("kpiSemanaBruto").textContent = formatBRL(totalBrutoSemana);
       document.getElementById("kpiSemanaPct").textContent =
-        `${pctSemana} pcts${bonusSemana > 0 ? ` + ${formatBRL(bonusSemana)} bônus` : ""}${indicacoesSemana > 0 ? ` + ${formatBRL(indicacoesSemana)} indicação` : ""}`;
+        `${pctSemana} pcts (${formatBRL(brutoEntregasSemana)})${bonusSemana > 0 ? ` + ${formatBRL(bonusSemana)} bônus` : ""}${indicacoesSemana > 0 ? ` + ${formatBRL(indicacoesSemana)} indicação` : ""}`;
 
-      // Últimos lançamentos na tela principal
       document.getElementById("resumoUltimosDiasContainer").innerHTML = entregasSemana.slice(-4).reverse().map(d => `
         <div class="data-row">
           <div>
-            <div style="font-family:var(--font-mono); font-weight:600; font-size:0.84rem;">${String(d.Data).split("-").reverse().join("/")}</div>
+            <div style="font-family:var(--font-mono); font-weight:600; font-size:0.84rem;">${formatarDataBR(d.Data)}</div>
             <div style="font-size:0.74rem; color:var(--text-secondary);">
-              ${d.Entregues_Normal} rota ${d.Resgate_Qtd ? `+ ${d.Resgate_Qtd} resgate (${d.Resgate_Origem || 'HUB'})` : ""}
+              ${d.Folga ? "Folga Programada" : `${d.Entregues_Normal} rota ${d.Resgate_Qtd ? `+ ${d.Resgate_Qtd} resgate (${d.Resgate_Origem || 'HUB'})` : ""}`}
             </div>
           </div>
           <div style="font-family:var(--font-mono); font-weight:700; font-size:0.88rem; color:var(--status-positive);">
@@ -1366,7 +1769,6 @@
         </div>
       `).join("") || `<div style="font-size:0.78rem; color:var(--text-secondary);">Nenhum lançamento registrado neste ciclo.</div>`;
 
-      // Auditoria de Bônus (Com pagamento parcial)
       const diasComBonus = db.entregas.filter(d => Number(d.Bonus_Ofertado) > 0);
       let somaRestanteBonus = 0;
 
@@ -1389,7 +1791,7 @@
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <div>
                 <div style="font-weight:600; font-size:0.86rem;">
-                  Bônus ${String(b.Data).split("-").reverse().join("/")}
+                  Bônus ${formatarDataBR(b.Data)}
                   ${b.Resgate_Origem ? `<span style="color:var(--text-secondary); font-weight:400;">· ${b.Resgate_Origem}</span>` : ""}
                 </div>
                 <div style="font-size:0.74rem; color:var(--text-secondary); margin-top:2px;">
@@ -1409,15 +1811,14 @@
         `;
       }).join("") || `<div style="font-size:0.8rem; color:var(--text-secondary);">Todos os bônus estão integralmente quitados.</div>`;
 
-      // Soma das Indicações (Pagas vs A Receber)
       let indPagas = 0;
       let indAReceber = 0;
       db.indicacoes.forEach(ind => {
         if (ind.Parcela_1_Inicio === "Pago") indPagas += 125;
-        else if (ind.Data_Nota_1) indAReceber += 125;
+        else indAReceber += 125;
 
         if (ind.Parcela_2_30Dias === "Pago") indPagas += 125;
-        else if (ind.Data_Nota_2) indAReceber += 125;
+        else indAReceber += 125;
       });
 
       const somaNotasPagas = db.notas.filter(n => n.Status === "Pago").reduce((a, n) => a + Number(n.Valor_Bruto), 0);
@@ -1442,11 +1843,12 @@
         </div>
       `).join("") || `<div style="font-size:0.8rem; color:var(--text-secondary);">Nenhuma nota registrada na planilha.</div>`;
 
-      // Renderização das Indicações com seletor de Data da Nota
       document.getElementById("listaIndicacoesContainer").innerHTML = db.indicacoes.map(ind => {
         const faltam = (ind.Parcela_1_Inicio === "Pago" ? 0 : 1) + (ind.Parcela_2_30Dias === "Pago" ? 0 : 1);
-        const ciclo1 = ind.Data_Nota_1 ? `Ciclo ${calcularCicloSemanal(ind.Data_Nota_1)}` : "Sem nota emitida";
-        const ciclo2 = ind.Data_Nota_2 ? `Ciclo ${calcularCicloSemanal(ind.Data_Nota_2)}` : "Sem nota emitida";
+        const dtEfetiva1 = obterDataEfetivaParcelaIndicacao(ind, 1);
+        const dtEfetiva2 = obterDataEfetivaParcelaIndicacao(ind, 2);
+        const ciclo1 = dtEfetiva1 ? `Soma na semana ${calcularCicloSemanal(dtEfetiva1)}` : "Defina a data ou marque Pago";
+        const ciclo2 = dtEfetiva2 ? `Soma na semana ${calcularCicloSemanal(dtEfetiva2)}` : "Defina a data ou marque Pago";
 
         return `
           <div class="data-row" style="flex-direction:column; align-items:stretch; gap:12px;">
@@ -1454,7 +1856,7 @@
               <div>
                 <div style="font-weight:700; font-size:0.94rem;">${ind.Nome_Indicado}</div>
                 <div style="font-size:0.74rem; color:var(--text-secondary); margin-top:2px;">
-                  Início: ${String(ind.Data_Inicio).split("-").reverse().join("/")} · 30 dias: <b>${String(ind.Data_30_Dias).split("-").reverse().join("/")}</b>
+                  Início: ${formatarDataBR(ind.Data_Inicio)} · 30 dias: <b>${formatarDataBR(ind.Data_30_Dias)}</b>
                 </div>
               </div>
               <div style="display:flex; align-items:center; gap:8px;">
@@ -1465,7 +1867,6 @@
               </div>
             </div>
 
-            <!-- Parcela 1 -->
             <div style="padding:10px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid var(--divider);">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                 <span style="font-size:0.78rem; font-weight:600;">1ª Nota — Ativação (R$ 125,00)</span>
@@ -1474,12 +1875,11 @@
                 </button>
               </div>
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-                <span style="font-size:0.72rem; color:var(--text-secondary);">Data envio nota (${ciclo1}):</span>
-                <input type="date" class="input-field input-mono" style="padding:5px 8px; font-size:0.76rem;" value="${ind.Data_Nota_1 || ''}" onchange="atualizarParcelaIndicacao('${ind.ID}', 1, 'data', this.value)" />
+                <span style="font-size:0.72rem; color:var(--text-secondary);">${ciclo1}:</span>
+                <input type="date" class="input-field input-mono" style="padding:5px 8px; font-size:0.76rem;" value="${normalizarDataISO(ind.Data_Nota_1)}" onchange="atualizarParcelaIndicacao('${ind.ID}', 1, 'data', this.value)" />
               </div>
             </div>
 
-            <!-- Parcela 2 -->
             <div style="padding:10px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid var(--divider);">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                 <span style="font-size:0.78rem; font-weight:600;">2ª Nota — 30 Dias (R$ 125,00)</span>
@@ -1488,21 +1888,20 @@
                 </button>
               </div>
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-                <span style="font-size:0.72rem; color:var(--text-secondary);">Data envio nota (${ciclo2}):</span>
-                <input type="date" class="input-field input-mono" style="padding:5px 8px; font-size:0.76rem;" value="${ind.Data_Nota_2 || ''}" onchange="atualizarParcelaIndicacao('${ind.ID}', 2, 'data', this.value)" />
+                <span style="font-size:0.72rem; color:var(--text-secondary);">${ciclo2}:</span>
+                <input type="date" class="input-field input-mono" style="padding:5px 8px; font-size:0.76rem;" value="${normalizarDataISO(ind.Data_Nota_2)}" onchange="atualizarParcelaIndicacao('${ind.ID}', 2, 'data', this.value)" />
               </div>
             </div>
           </div>
         `;
       }).join("") || `<div style="font-size:0.82rem; color:var(--text-secondary);">Nenhuma indicação cadastrada na planilha.</div>`;
 
-      // Histórico Diário
       document.getElementById("listaHistoricoDiario").innerHTML = db.entregas.slice().reverse().map(d => `
         <div class="data-row">
           <div>
             <div style="font-family:var(--font-mono); font-weight:600; font-size:0.84rem;">
-              ${String(d.Data).split("-").reverse().join("/")}
-              <span style="font-family:var(--font-sans); font-size:0.72rem; color:var(--text-muted); font-weight:400;">(${d.Semana_Ciclo})</span>
+              ${formatarDataBR(d.Data)}
+              <span style="font-family:var(--font-sans); font-size:0.72rem; color:var(--text-muted); font-weight:400;">(${d.Semana_Ciclo || calcularCicloSemanal(d.Data)})</span>
             </div>
             <div style="font-size:0.74rem; color:var(--text-secondary); margin-top:2px;">
               ${d.Folga ? "Folga Programada" : `${d.Entregues_Normal} rota ${d.Resgate_Qtd ? `+ ${d.Resgate_Qtd} resgate (${d.Resgate_Origem || 'HUB'})` : ""} ${d.Bonus_Ofertado ? `· Bônus R$ ${d.Bonus_Ofertado}` : ""}`}
@@ -1525,8 +1924,7 @@
       recalcularDia();
     }
 
-    // ESPELHAMENTO FIEL DA PLANILHA (REFLETE EXCLUSÕES E EDIÇÕES FEITAS NO SHEETS)
-    async function sincronizarPlanilha(silencioso = false) {
+    async function sincronizarPlanilha(silencioso = false, checarOntemAposSync = true) {
       const url = db.config.scriptUrl || DEFAULT_SCRIPT_URL;
       try {
         document.getElementById("syncStatusText").textContent = "Sincronizando com Google Sheets...";
@@ -1535,36 +1933,62 @@
         if (json.status === "ok" && json.data) {
           db.entregas = (json.data.entregas || []).map(d => ({
             ...d,
+            Data: normalizarDataISO(d.Data),
             Bonus_Pago: typeof d.Bonus_Pago !== "undefined" && d.Bonus_Pago !== ""
               ? Number(d.Bonus_Pago)
               : (d.Bonus_Status === "Pago" ? Number(d.Bonus_Ofertado || 0) : 0)
           }));
-          db.devolucoes = json.data.devolucoes || [];
+          db.devolucoes = (json.data.devolucoes || []).map(t => ({
+            ...t,
+            Data_Recebimento: normalizarDataISO(t.Data_Recebimento),
+            Data_Devolucao: normalizarDataISO(t.Data_Devolucao)
+          }));
           db.notas = json.data.notas || [];
-          db.indicacoes = json.data.indicacoes || [];
+          db.indicacoes = (json.data.indicacoes || []).map(ind => ({
+            ...ind,
+            Data_Inicio: normalizarDataISO(ind.Data_Inicio),
+            Data_30_Dias: normalizarDataISO(ind.Data_30_Dias),
+            Data_Nota_1: normalizarDataISO(ind.Data_Nota_1),
+            Data_Nota_2: normalizarDataISO(ind.Data_Nota_2)
+          }));
 
           salvarLocal();
           carregarDiaSelecionado();
           atualizarTelas();
           document.getElementById("syncStatusText").textContent = "Sincronizado com Google Sheets";
+
+          if (checarOntemAposSync) {
+            verificarPendenciaDiaAnterior();
+          }
         }
       } catch (e) {
         document.getElementById("syncStatusText").textContent = "Modo Offline (Cache Local)";
+        if (checarOntemAposSync) verificarPendenciaDiaAnterior();
         if (!silencioso) alert("Não foi possível conectar à planilha no momento.");
       }
     }
 
-    // Sincroniza ao abrir e sempre que voltar para a aba do navegador
     document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible") sincronizarPlanilha(true);
+      if (document.visibilityState === "visible") {
+        const hojeAgora = obterDataLocalISO(0);
+        if (hojeAgora !== ultimoDiaChecadoNoRelogio) {
+          ultimoDiaChecadoNoRelogio = hojeAgora;
+          document.getElementById("inputDataDia").value = hojeAgora;
+        }
+        sincronizarPlanilha(true, true);
+      }
     });
 
     window.addEventListener("DOMContentLoaded", () => {
+      const hojeISO = obterDataLocalISO(0);
+      document.getElementById("inputDataDia").value = hojeISO;
+      document.getElementById("inputDataBaixa").value = hojeISO;
       document.getElementById("inputScriptUrl").value = db.config.scriptUrl || DEFAULT_SCRIPT_URL;
+
       aplicarTemaDOM(db.config.themePref || "auto");
       carregarDiaSelecionado();
       atualizarTelas();
-      sincronizarPlanilha(true);
+      sincronizarPlanilha(true, true);
     });
   </script>
 </body>
